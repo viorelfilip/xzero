@@ -1,0 +1,25 @@
+div.game-grid{
+    margin: 1em;
+    background-color: lightgray;
+    border: 1 solid darkslategrey;
+    display: inline-block;
+}
+div.game-row{
+    width: 12em;
+    /*display: inline-block;*/
+}
+button.game-cell{
+    width: 4em;
+    height: 4em;
+    font-weight: bolder !important;
+}
+div.game-active{
+    opacity: 0;
+}
+div.game-over{
+    opacity: 50;
+}
+
+.fa {
+    vertical-align: middle;
+}
