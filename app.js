@@ -12,7 +12,12 @@ function xzero($http, game, userName) {
             method: 'GET',
             url: '/status?player=' + userName
         }).then(function successCallback(response) {
-            vm.players = response.data;
+            vm.players = response.data.players;
+            response.data.games.forEach(function (item) {
+                if (item.stare === 'init')
+                    if (confirm(item.player1 + ' vrea sa joace cu tine. De acord ?'))
+                        vm.games.push(game.create(item));
+            }, this);
         });
     }
     vm.newGame = function newGame(player) {
@@ -20,7 +25,7 @@ function xzero($http, game, userName) {
         var newGame = game.create(player.name);
         vm.games.push(newGame);
         // temporar
-        newGame.autoPlay();
+        // newGame.autoPlay();
     }
     vm.register = function () {
         vm.newUser = vm.newUser || userName;

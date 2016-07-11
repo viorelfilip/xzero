@@ -5,11 +5,21 @@ angular
 function game($http, userName) {
     var service = this;
     service.create = function (playerName) {
-        var player = { name: playerName, value: 'X' }; // cel care va incepe jocul, este cel invitat ( oponetul / adversarul )
+        if (playerName.player1)
+            var player = { name: userName, value: '0' };
+        else {
+            var player = { name: playerName, value: 'X' }; // cel care va incepe jocul, este cel invitat ( oponetul / adversarul )
+            $http({
+                method: 'GET',
+                url: '/createNewGame?player=' + userName + '&oponent=' + playerName
+            }).then(function successCallback(response) {
+                vm.players = response.data;
+            });
+        }
         return {
-            oponentPlayer: player.name,
+            oponentPlayer: playerName.player1 || player.name,
             gameOver: false,
-            player1: { name: userName, value: '0' },
+            player1: { name: playerName.player1 || userName, value: (playerName.player1 ? 'X' : '0') },
             player2: player,
             player: player,
             rows: [
