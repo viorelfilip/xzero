@@ -1,10 +1,20 @@
 module.exports = {
     register: register,
-    status: status
+    status: status,
+    move: move,
+    createNewGame: createNewGame
 };
 
 var players = [];
-
+var games = [];
+var gameApi = {
+    player1: 'Viorel',
+    player2: 'Andra',
+    player: 'Viorel',
+    stare: '2,2'
+}
+var stateOptions = ['init' // deschidere joc
+    ,]
 setInterval(function () {
     for (var index = players.length; index--;) {
         var date = new Date();
@@ -15,6 +25,26 @@ setInterval(function () {
     }
 }, 5000);
 
+function* createNewGame() {
+    // adauga in lista de jocuri
+    // inca o partida, notifica oponentul ca are un jos in asteptare
+    // atunci cand cere noul status
+    console.log('Jucatorul ' + this.query.player + ' a initiat o partida cu ' + this.query.oponent);
+    games.push({
+        player1: this.query.player,
+        player2: this.query.oponent,
+        player: this.query.player,
+        stare: 'init'
+    });
+}
+function* move() {
+    var move = {
+        player1: 'Viorel',
+        player2: 'Andra',
+        player: 'Viorel',
+        stare: '2,2'
+    }
+}
 function* register() {
     var player = this.query.player;
     if (player) {
@@ -34,7 +64,17 @@ function* register() {
 }
 
 function* status() {
-    this.body = players;
+    var userGames = [];
+    games.forEach((game) => {
+        if ((game.player1 === this.query.player || game.player2 === this.query.player) && game.player !== this.query.player)
+            userGames.push(game);
+    });
+    
+    this.body = {
+        players: players,
+        games: userGames
+    };
+
     var player = this.query.player;
     players.forEach((item) => {
         if (item.name === player)
