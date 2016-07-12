@@ -7,17 +7,27 @@ function xzero($http, game, userName) {
     var vm = this;
     vm.userName = userName;
     vm.games = [];
-    vm.status = function () {
+    vm.update = function () {
+        if (!userName) return;
         $http({
             method: 'GET',
-            url: '/status?player=' + userName
+            url: '/update?player=' + userName
         }).then(function successCallback(response) {
+            //alert(JSON.stringify(response));
             vm.players = response.data.players;
             response.data.games.forEach(function (item) {
                 if (item.stare === 'init')
                     if (confirm(item.player1 + ' vrea sa joace cu tine. De acord ?'))
                         vm.games.push(game.create(item));
-            }, this);
+                if (item.move) {
+                    // pentru care joc ?
+                    // gasim jocul si ii dam mutarea ()
+                    vm.games.forEach(function (game) {
+                        if (game.player1.name === item.player1 && game.player2.name === item.player2)
+                            game.oponentMove(item);
+                    });
+                }
+            });
         });
     }
     vm.newGame = function newGame(player) {
@@ -41,6 +51,6 @@ function xzero($http, game, userName) {
             alert('Eroare la comunicarea cu serverul !\n' + response);
         });
     }
-    setInterval(vm.status, 2000);
+    setInterval(vm.update, 2000);
     if (userName) vm.register();
 }

@@ -1,6 +1,6 @@
 module.exports = {
     register: register,
-    status: status,
+    update: update,
     move: move,
     createNewGame: createNewGame
 };
@@ -12,9 +12,8 @@ var gameApi = {
     player2: 'Andra',
     player: 'Viorel',
     stare: '2,2'
-}
-var stateOptions = ['init' // deschidere joc
-    ,]
+};
+
 setInterval(function () {
     for (var index = players.length; index--;) {
         var date = new Date();
@@ -25,26 +24,20 @@ setInterval(function () {
     }
 }, 5000);
 
-function* createNewGame() {
-    // adauga in lista de jocuri
-    // inca o partida, notifica oponentul ca are un jos in asteptare
-    // atunci cand cere noul status
-    console.log('Jucatorul ' + this.query.player + ' a initiat o partida cu ' + this.query.oponent);
-    games.push({
-        player1: this.query.player,
-        player2: this.query.oponent,
-        player: this.query.player,
-        stare: 'init'
-    });
-}
 function* move() {
-    var move = {
-        player1: 'Viorel',
-        player2: 'Andra',
-        player: 'Viorel',
-        stare: '2,2'
-    }
+    //console.log('New move was made : ');
+    //console.log(this.request.body);    
+    // var move = {
+    //     player1: 'Viorel',
+    //     player2: 'Andra',
+    //     player: 'Viorel',
+    //     stare: '2,2'
+    // }
+    //console.log('move is instanceof : ' + (this.request.body instanceof 'String' ? 'String' : 'Object'));
+    games.push(JSON.parse(this.request.body));
+    console.log('player = ' + this.request.body.player);
 }
+
 function* register() {
     var player = this.query.player;
     if (player) {
@@ -62,14 +55,30 @@ function* register() {
         this.body = [{ name: "Alege un name de jucator !", date: new Date() }];
     }
 }
-
-function* status() {
+function* createNewGame() {
+    // adauga in lista de jocuri
+    // inca o partida, notifica oponentul ca are un jos in asteptare
+    // atunci cand cere noul status
+    console.log('Jucatorul ' + this.query.player + ' a initiat o partida cu ' + this.query.oponent);
+    games.push({
+        player1: this.query.player,
+        player2: this.query.oponent,
+        player: this.query.player,
+        stare: 'init'
+    });
+}
+function* update() {
     var userGames = [];
     games.forEach((game) => {
         if ((game.player1 === this.query.player || game.player2 === this.query.player) && game.player !== this.query.player)
             userGames.push(game);
     });
-    
+    if (userGames.length)
+        console.log(this.query.player + ' are jocurile : \n' + JSON.stringify(userGames));
+    userGames.forEach((game) => {
+        games.splice(games.indexOf(game), 1);
+    });
+
     this.body = {
         players: players,
         games: userGames

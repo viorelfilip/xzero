@@ -6,7 +6,7 @@ function game($http, userName) {
     var service = this;
     service.create = function (playerName) {
         if (playerName.player1)
-            var player = { name: userName, value: '0' };
+            var player = { name: userName, value: 'X' };
         else {
             var player = { name: playerName, value: 'X' }; // cel care va incepe jocul, este cel invitat ( oponetul / adversarul )
             $http({
@@ -19,7 +19,7 @@ function game($http, userName) {
         return {
             oponentPlayer: playerName.player1 || player.name,
             gameOver: false,
-            player1: { name: playerName.player1 || userName, value: (playerName.player1 ? 'X' : '0') },
+            player1: { name: playerName.player1 || userName, value: '0' },
             player2: player,
             player: player,
             rows: [
@@ -43,10 +43,29 @@ function game($http, userName) {
                 }, 2000); // oponentul (calculatorul) are max 2 sec de gandire :) 
             },
             isDisabled: function () { return this.gameOver || (this.player.name === this.oponentPlayer) },
+            oponentMove: function (msg) {
+                this.rows[msg.move.substr(0, 1)][msg.move.substr(2, 1)].value = this.player.value;
+                this.updateStatus();
+            },
             clickHandle: function (row, index) {
                 if (row[index].value || this.gameOver) return;
                 row[index].value = this.player.value;
                 this.updateStatus();
+                var req = {
+                    method: 'POST',
+                    url: 'move',
+                    headers: {
+                        'Content-Type': "text/plain"
+                    },
+                    data: {
+                        player: userName,
+                        player1: this.player1.name,
+                        player2: this.player2.name,
+                        move: this.rows.indexOf(row) + ',' + index
+                    }
+                }
+
+                $http(req).then(function () { }, function () { });
             },
             updateStatus: function () {
                 // verifica daca e gata jocul
