@@ -1,0 +1,1 @@
+alert('Salut, bun venit !');
