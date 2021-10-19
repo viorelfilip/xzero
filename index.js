@@ -36,15 +36,34 @@ function showGames() {
     let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
     let email = users.filter(u => u.id === opUser)[0].email;
     el.innerHTML = `<p>${email}</p>`;
-    el.innerHTML += `<div class="game-cell">${game.c1 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c2 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c3 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c4 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c5 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c6 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c7 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c8 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell">${game.c9 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c1 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c2 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c3 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c4 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c5 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c6 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c7 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c8 || ''}</div>`;
+    // el.innerHTML += `<div class="game-cell">${game.c9 || ''}</div>`;
+    
+}
+const changeTurn = () => {
+    return turn === "X" ? "0" : "X"
 }
 
+const checkWin = () => {
 
+}
+let turn = "X";
+let boxes = document.getElementsByClassName("game-cell");
+Array.from(boxes).forEach(element =>{
+    let textcell = element.querySelector('.celltext');
+    element.addEventListener('click', (e) =>{
+        if(textcell.innerText === ''){
+            textcell.innerText = turn;
+            changeTurn();
+            checkWin();
+
+        }
+    })
+})
