@@ -16,3 +16,9 @@
     color: #000000;
     cursor: pointer;
 } 
+
+.imgbox img{
+    position: absolute;
+    top: 20%;
+    left: 30%;  
+}

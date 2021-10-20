@@ -1,4 +1,5 @@
 let loggedUser = 1; // utilizatorul conectat in aplicatie
+let gamewin = new Audio("win-sound.mp3")
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' }
@@ -29,22 +30,38 @@ function showData() {
 function gameOver(){
     let game = games[0];
     let wins = ['OOO', 'XXX']
-    if(~wins.indexOf(game.c1+game.c2+game.c3))
+    if(~wins.indexOf(game.c1+game.c2+game.c3)){
+        gamewin.play();
         return alert('Gata joc');
-    if(~wins.indexOf(game.c4+game.c5+game.c6))
+    }
+    if(~wins.indexOf(game.c4+game.c5+game.c6)){
+        gamewin.play();
         return alert('Gata joc');
-    if(~wins.indexOf(game.c7+game.c8+game.c9))
+    }
+    if(~wins.indexOf(game.c7+game.c8+game.c9)){
+        gamewin.play();
         return alert('Gata joc');
-    if(~wins.indexOf(game.c1+game.c4+game.c7))
+    }
+    if(~wins.indexOf(game.c1+game.c4+game.c7)){
+        gamewin.play();
         return alert('Gata joc');
-    if(~wins.indexOf(game.c1+game.c5+game.c9))
+    }
+    if(~wins.indexOf(game.c1+game.c5+game.c9)){
+        gamewin.play();
         return alert('Gata joc');   
-    if(~wins.indexOf(game.c2+game.c5+game.c8))
+    }
+    if(~wins.indexOf(game.c2+game.c5+game.c8)){
+        gamewin.play();
         return alert('Gata joc');   
-    if(~wins.indexOf(game.c3+game.c6+game.c9))
+    }
+    if(~wins.indexOf(game.c3+game.c6+game.c9)){
+        gamewin.play();
         return alert('Gata joc');   
-    if(~wins.indexOf(game.c3+game.c5+game.c7))
+    }
+    if(~wins.indexOf(game.c3+game.c5+game.c7)){
+        gamewin.play();
         return alert('Gata joc');   
+    }
 }
 
 function showLoggedUser() {
