@@ -62,36 +62,6 @@ function clickOnCell(cell){
 
 }
 
-const winningConditions = [
-        [c1, c2, c3],
-        [c4, c5, c6],
-        [c7, c8, c9],
-        [c1, c4, c7],
-        [c2, c5, c8],
-        [c3, c6, c9],
-        [c1, c5, c9],
-        [c3, c5, c7]
-];
 
-function handleResultValidation() {
-    let roundWon = false;
-    for (let i = 0; i <= 7; i++) {
-        const winCondition = winningConditions[i];
-        let a = gameState[winCondition[0]];
-        let b = gameState[winCondition[1]];
-        let c = gameState[winCondition[2]];
-    if (a === '' || b === '' || c === '') {
-        continue;
-    }
-    if (a === b && b === c) {
-        roundWon = true;
-        break
-    }
-    }
-    if (roundWon) {
-        statusDisplay.innerHTML = winningMessage();
-        gameActive = false;
-        return;
-    }
-}
+
 
