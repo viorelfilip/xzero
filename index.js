@@ -41,4 +41,57 @@ function showGames() {
 
     
 }
+let currentPlayer = 1;
+function clickOnCell(cell){
+    //let cell = document.getElementById('game');
+    console.log(cell.id);
+    if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
+    return;
+    }
+    let symbol = "";
+    if(currentPlayer == 1){
+        symbol = "X";
+        currentPlayer = 2;
+    } else {
+        symbol = "O";
+        currentPlayer = 1;
+    }
+    
+    cell.innerHTML = symbol;
+    console.log("Cell was clicked!");
+
+}
+
+const winningConditions = [
+        [c1, c2, c3],
+        [c4, c5, c6],
+        [c7, c8, c9],
+        [c1, c4, c7],
+        [c2, c5, c8],
+        [c3, c6, c9],
+        [c1, c5, c9],
+        [c3, c5, c7]
+];
+
+function handleResultValidation() {
+    let roundWon = false;
+    for (let i = 0; i <= 7; i++) {
+        const winCondition = winningConditions[i];
+        let a = gameState[winCondition[0]];
+        let b = gameState[winCondition[1]];
+        let c = gameState[winCondition[2]];
+    if (a === '' || b === '' || c === '') {
+        continue;
+    }
+    if (a === b && b === c) {
+        roundWon = true;
+        break
+    }
+    }
+    if (roundWon) {
+        statusDisplay.innerHTML = winningMessage();
+        gameActive = false;
+        return;
+    }
+}
 
