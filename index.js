@@ -47,4 +47,4 @@ function showGames() {
     el.innerHTML += `<div class="game-cell">${game.c9 || ''}</div>`;
 }
 
-
+document.onreadystatechange = () => showData();
