@@ -13,14 +13,25 @@ let games = [ // doar jocurile utilizatorului conectat
         c1: null,
         c2: null,
         c3: null,
-        c4: 'X',
-        c5: 'O',
+        c4: null,
+        c5: null,
         c6: null,
-        c7: 'X',
+        c7: null,
         c8: null,
         c9: null
     }
 ];
+
+function gameOver(){
+    let game = games[0];
+    let wins = ['OOO', 'XXX']
+    if(~wins.indexOf(game.c1+game.c2+game.c3))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c4+game.c5+game.c6))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c7+game.c8+game.c9))
+        return alert('Gata joc');
+}
 
 function showData() {
     showGames();
@@ -62,8 +73,6 @@ function showGames() {
 let currPlayer = 1;
 
 function clickCell(cell){
-    //let cell = document.getElementById('game');
-    console.log(cell.id);
     if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
        return;
     }
@@ -75,11 +84,11 @@ function clickCell(cell){
         symbol = "O";
         currPlayer = 1;
     }
-    
     cell.innerHTML = symbol;
-    console.log("Cell was clicked!");
-
+    games[0][cell.id] = symbol;
+    gameOver();
 }
+
 
 
 
