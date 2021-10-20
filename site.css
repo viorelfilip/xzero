@@ -8,5 +8,14 @@ div.game-cell{
     text-transform: uppercase;
     align-items: center;
     justify-content: center;
-    display: flex;
+    display: grid;
+        
 }
+#game {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+  } 
+
+
+
+
