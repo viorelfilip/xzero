@@ -24,7 +24,7 @@ let games = [ // doar jocurile utilizatorului conectat
 function showData() {
     showGames();
     showLoggedUser();
-    clickOnCell();
+    // clickOnCell();
 }
 
 function showLoggedUser() {
