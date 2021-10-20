@@ -14,10 +14,10 @@
         <button onclick="showData()">Incarca utilizator</button>
     </p>
     <div class="players"></div>
-    <div class="container" id="game" ></div>
+    <!-- <div class="container" id="game" ></div> -->
     <script src="index.js"></script>
    
-    <!-- <section>
+    <section>
         <h1 class="game-title">X SI 0</h1>
                 <div class="game-container">
                     <div id="c1" onClick="clickOnCell(this)" class="game-cell"></div>
@@ -32,7 +32,31 @@
                 </div>
                 <h2 class="game--status"></h2>
                 <button class="game--restart">Restart Game</button>
-        </section> -->
+        </section>
+
+        <script>
+            let currentPlayer = 1;
+
+                function clickOnCell(cell){
+                    //let cell = document.getElementById('game');
+                    console.log(cell.id);
+                    if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
+                    return;
+                    }
+                    let symbol = "";
+                    if(currentPlayer == 1){
+                        symbol = "X";
+                        currentPlayer = 2;
+                    } else {
+                        symbol = "O";
+                        currentPlayer = 1;
+                    }
+                    
+                    cell.innerHTML = symbol;
+                    console.log("Cell was clicked!");
+
+                }
+        </script>
 </body>
 </html>
 

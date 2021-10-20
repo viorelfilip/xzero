@@ -1,23 +1,15 @@
+.game-container{
+    display: grid;
+    grid-template-rows: 200px 200px 200px;
+    grid-template-columns: 200px 200px 200px;
+}
 
-
-div.game-cell{
-    background-color: bisque;
-    width: 10rem;
-    height: 10rem;
-    margin: 0.2rem;
-    text-align: center;
-    font-weight: bolder;
-    text-transform: uppercase;
+.game-cell{
+    background: #088bcc;
+    border: 1px solid #000000;
+    display: flex;
     align-items: center;
     justify-content: center;
-    display: flex;
-    border: 1px solid black;
+    color: rgb(17, 13, 13);
     cursor: pointer;
-  
-}
-div.container{
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    width: 50px;
-    margin: 50px;
-}
+} 
