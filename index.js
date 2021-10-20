@@ -35,22 +35,41 @@ function showGames() {
     let game = games[0];
     let el = document.getElementById('game');
     let el1 = document.getElementById('text');
+    
     let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
     let email = users.filter(u => u.id === opUser)[0].email;
     el1.innerHTML = `<p>${email}</p>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('1')">${game.c1 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('2')">${game.c2 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('3')">${game.c3 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('4')">${game.c4 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('5')">${game.c5 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('6')">${game.c6 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('7')">${game.c7 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('8')">${game.c8 || ''}</div>`;
-    el.innerHTML += `<div class="game-cell" onclick="Logic('9')">${game.c9 || ''}</div>`;
+    el.innerHTML += `<div id="c1" onclick="Logic('this')" class="game-cell">${game.c1 || ''}</div>`;
+    el.innerHTML += `<div id="c2" onclick="Logic('this')" class="game-cell" >${game.c2 || ''}</div>`;
+    el.innerHTML += `<div id="c3" onclick="Logic('this')" class="game-cell">${game.c3 || ''}</div>`;
+    el.innerHTML += `<div id="c4" onclick="Logic('this')" class="game-cell">${game.c4 || ''}</div>`;
+    el.innerHTML += `<div id="c5" onclick="Logic('this')" class="game-cell">${game.c5 || ''}</div>`;
+    el.innerHTML += `<div id="c6" onclick="Logic('this')" class="game-cell">${game.c6 || ''}</div>`;
+    el.innerHTML += `<div id="c7" onclick="Logic('this')" class="game-cell">${game.c7 || ''}</div>`;
+    el.innerHTML += `<div id="c8" onclick="Logic('this')" class="game-cell">${game.c8 || ''}</div>`;
+    el.innerHTML += `<div id="c9" onclick="Logic('this')" class="game-cell">${game.c9 || ''}</div>`;
 }
 
+let currPlayer = 1;
+
 function Logic(a){
-        alert(a);
+       /* alert(a);*/
+        console.log(cell.id);
+        if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
+           return;
+        }
+        let symbol = "";
+        if(currPlayer == 1){
+            symbol = "X";
+            currPlayer = 2;
+        } else {
+            symbol = "O";
+            currPlayer = 1;
+        }
+        
+        cell.innerHTML = symbol;
+        console.log("Cell was clicked!");
+    
 }
 
 
