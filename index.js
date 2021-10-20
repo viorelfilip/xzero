@@ -34,8 +34,10 @@ function showLoggedUser() {
 function showGames() {
     let game = games[0];
     let el = document.getElementById('game');
+    let players = document.getElementsByClassName("players")[0];
     let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
     let email = users.filter(u => u.id === opUser)[0].email;
+    players.innerHTML = `<p> Player 2: ${email}</p>`;
     el.innerHTML = `<p>${email}</p>`;
     // el.innerHTML += `<div class="game-cell">${game.c1 || ''}</div>`;
     // el.innerHTML += `<div class="game-cell">${game.c2 || ''}</div>`;
