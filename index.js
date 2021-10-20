@@ -24,6 +24,7 @@ let games = [ // doar jocurile utilizatorului conectat
 function showData() {
     showGames();
     showLoggedUser();
+    clickOnCell();
 }
 
 function showLoggedUser() {
@@ -46,24 +47,37 @@ function showGames() {
     // el.innerHTML += `<div class="game-cell">${game.c8 || ''}</div>`;
     // el.innerHTML += `<div class="game-cell">${game.c9 || ''}</div>`;
     
-}
-const changeTurn = () => {
-    return turn === "X" ? "0" : "X"
+    el.innerHTML += `<div id="c1" onClick="clickOnCell(this)" class="game-cell">${game.c1 || ''}</div>`;
+    el.innerHTML += `<div id="c2" onClick="clickOnCell(this)" class="game-cell">${game.c2 || ''}</div>`;
+    el.innerHTML += `<div id="c3" onClick="clickOnCell(this)" class="game-cell">${game.c3 || ''}</div>`;
+    el.innerHTML += `<div id="c4" onClick="clickOnCell(this)" class="game-cell">${game.c4 || ''}</div>`;
+    el.innerHTML += `<div id="c5" onClick="clickOnCell(this)" class="game-cell">${game.c5 || ''}</div>`;
+    el.innerHTML += `<div id="c6" onClick="clickOnCell(this)" class="game-cell">${game.c6 || ''}</div>`;
+    el.innerHTML += `<div id="c7" onClick="clickOnCell(this)" class="game-cell">${game.c7 || ''}</div>`;
+    el.innerHTML += `<div id="c8" onClick="clickOnCell(this)" class="game-cell">${game.c8 || ''}</div>`;
+    el.innerHTML += `<div id="c9" onClick="clickOnCell(this)" class="game-cell">${game.c9 || ''}</div>`;
+
+    
 }
 
-const checkWin = () => {
+let currentPlayer = 1;
+
+function clickOnCell(cell){
+    //let cell = document.getElementById('game');
+    console.log(cell.id);
+    if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
+       return;
+    }
+    let symbol = "";
+    if(currentPlayer == 1){
+        symbol = "X";
+        currentPlayer = 2;
+    } else {
+        symbol = "O";
+        currentPlayer = 1;
+    }
+    
+    cell.innerHTML = symbol;
+    console.log("Cell was clicked!");
 
 }
-let turn = "X";
-let boxes = document.getElementsByClassName("game-cell");
-Array.from(boxes).forEach(element =>{
-    let textcell = element.querySelector('.celltext');
-    element.addEventListener('click', (e) =>{
-        if(textcell.innerText === ''){
-            textcell.innerText = turn;
-            changeTurn();
-            checkWin();
-
-        }
-    })
-})
