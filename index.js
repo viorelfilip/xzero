@@ -24,7 +24,27 @@ let games = [ // doar jocurile utilizatorului conectat
 function showData() {
     showGames();
     showLoggedUser();
-    clickOnCell();
+}
+
+function gameOver(){
+    let game = games[0];
+    let wins = ['OOO', 'XXX']
+    if(~wins.indexOf(game.c1+game.c2+game.c3))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c4+game.c5+game.c6))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c7+game.c8+game.c9))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c1+game.c4+game.c7))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c1+game.c5+game.c9))
+        return alert('Gata joc');   
+    if(~wins.indexOf(game.c2+game.c5+game.c8))
+        return alert('Gata joc');   
+    if(~wins.indexOf(game.c3+game.c6+game.c9))
+        return alert('Gata joc');   
+    if(~wins.indexOf(game.c3+game.c5+game.c7))
+        return alert('Gata joc');   
 }
 
 function showLoggedUser() {
@@ -58,6 +78,8 @@ function clickOnCell(cell){
     }
     
     cell.innerHTML = symbol;
+    games[0][cell.id] = symbol;
+    gameOver();
     console.log("Cell was clicked!");
 
 }
