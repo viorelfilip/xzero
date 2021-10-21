@@ -16,7 +16,11 @@ div.game-cell{
 div.container{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    width: 40px;
-    margin: 50px;
+    width: 460px;
+    margin: auto;
+    padding: 100px;
+   
 }
-
+h4{
+    text-align: center;
+}

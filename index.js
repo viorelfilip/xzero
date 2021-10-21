@@ -22,9 +22,12 @@ let games = [ // doar jocurile utilizatorului conectat
         c6: null,
         c7: null,
         c8: null,
-        c9: null
+        c9: null 
     }
 ];
+
+// const cloneGames = Object.assign({}, games);
+// console.log(cloneGames);
 
 function gameOver(){
     let game = games[0];
@@ -57,8 +60,8 @@ function showGames() {
     let players = document.getElementsByClassName("players")[0];
 
 
-    let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
-    let email = users.filter(u => u.id === opUser)[0].email;
+    let opUser1 = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
+    let email = users.filter(u => u.id === opUser1)[0].email;
     players.innerHTML = `<p> Player 2: ${email}</p>`;
 
 
