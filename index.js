@@ -113,6 +113,14 @@ function resetGame(){
     games[0].c9=null;
 
 }
+function getGames() {
+    fetch('api/query.php?query=games-by-user&id=1')
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(console.error);
+}
+
+<<<<<<< HEAD
 
 
 
@@ -121,4 +129,6 @@ function resetGame(){
 
 
 
-
+=======
+document.onreadystatechange = () => showData();
+>>>>>>> master
