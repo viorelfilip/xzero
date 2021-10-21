@@ -26,6 +26,17 @@ let games = [ // doar jocurile utilizatorului conectat
     }
 ];
 
+function gameOver(){
+    let game = games[0];
+    let wins = ['OOO', 'XXX']
+    if(~wins.indexOf(game.c1+game.c2+game.c3))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c4+game.c5+game.c6))
+        return alert('Gata joc');
+    if(~wins.indexOf(game.c7+game.c8+game.c9))
+        return alert('Gata joc');
+}
+
 function showData() {
     document.getElementById('loadData').style.display = "none";
     document.getElementById('score').style.display = "";
@@ -166,6 +177,7 @@ function clickCell(cell) {
 
 
 }
+
 
 
 
