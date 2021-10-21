@@ -1,8 +1,11 @@
 div.game-cell{
-    background-color: bisque;
+    background-color: green;
     width: 3rem;
     height: 3rem;
     margin: 0.2rem;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     text-align: center;
     font-weight: bolder;
     text-transform: uppercase;
@@ -10,3 +13,23 @@ div.game-cell{
     justify-content: center;
     display: flex;
 }
+
+div.container{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 50px;
+    margin: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
