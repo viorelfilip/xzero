@@ -33,6 +33,11 @@
                 exit();
             }
             if (!empty($params)) {
+                //echo $sql;
+                //print_r($params);
+                // foreach($params as $p){
+                //     echo $p . "\n";
+                // }
                 $stmt = self::$conn->prepare($sql);
                 foreach ($params as $p) {
                     $stmt->bind_param('s', $p); // bind all as string

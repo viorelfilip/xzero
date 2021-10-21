@@ -46,5 +46,11 @@ function showGames() {
     el.innerHTML += `<div class="game-cell">${game.c8 || ''}</div>`;
     el.innerHTML += `<div class="game-cell">${game.c9 || ''}</div>`;
 }
+function getGames() {
+    fetch('api/query.php?query=games-by-user&id=1')
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(console.error);
+}
 
 document.onreadystatechange = () => showData();
