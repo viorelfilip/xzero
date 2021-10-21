@@ -14,8 +14,9 @@
         <button onclick="showData()">Incarca utilizator</button>
     </p>
     <div class="players"></div>
+    <button onclick="getGames()">Incarca din baza de date !</button>
 
-    <section>
+        <section>
         <h1 class="game-title">X SI 0</h1>
                 <div class="game-container">
                     <div id="c1" onClick="clickOnCell(this)" class="game-cell"></div>
@@ -26,12 +27,29 @@
                     <div id="c6" onClick="clickOnCell(this)" class="game-cell"></div>
                     <div id="c7" onClick="clickOnCell(this)" class="game-cell"></div>
                     <div id="c8" onClick="clickOnCell(this)" class="game-cell"></div>
-                    <div id="c9" onClick="clickOnCell(this)" class="game-cell"></div>
+                    <div id="c9" onClick="clickOnCell(this)" class="game-cell"></div>    
+                    <h2 class="game--status"></h2>
+                    <button class="game-restart" onclick="restartGame()">Restart Game</button>
                 </div>
-                
-                <h2 class="game--status"></h2>
-                <button class="game--restart">Restart Game</button>
         </section>
+                 
+        <section>
+            <div class="game-container2">
+                    <div id="c1_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c2_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c3_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c4_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c5_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c6_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c7_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c8_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <div id="c9_2" onClick="clickOnCell2(this)" class="game-cell2"></div>
+                    <h2 class="game--status"></h2>
+                    <button class="game-restart2" onclick="restartGame2()">Restart Game</button>   
+            </div>    
+         
+        </section>   
+ 
         <div class="gameInfo">
        <div class="imgbox">
         <img src="omg-x0.gif" alt="" />
@@ -39,6 +57,7 @@
         </div>
 
         <script src="index.js"></script>
+        <script src="test.js"></script>
 
     
 </body>
