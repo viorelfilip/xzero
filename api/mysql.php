@@ -1,32 +1,36 @@
 <?php
-    ini_set("display_errors", 1);
-    error_reporting(E_ALL);
-
-    class MySQL
+    class mysql
     {
         // property declaration
-        private $conn;
+        private static $conn;
+        private static $host="gamedb.mysql.database.azure.com";
+        private static $user="viorelfilip@gamedb";
+        private static $pass="Indeco@2020-";
+        private static $db="xzero";
+        private static $port=3306;
 
         // constructor
-        public function __construct()
+        public static function connect()
         {
             try {
-                $this->conn=mysqli_init();
-                mysqli_real_connect($this->conn, "gamedb.mysql.database.azure.com", "viorelfilip@gamedb", "Indeco@2020", "xzero", 3306);
+                self::$conn=mysqli_init();
+                mysqli_real_connect(self::$conn, self::$host, self::$user, self::$pass, self::$db, self::$port);
                 //echo "MySQL conection completed";
             } catch (Exception $e) {
                 echo 'Connection Exception: ',  $e->getMessage(), "\n";
+                exit();
             }
         }
         // method declaration
-        public function query($sql)
+        public static function query($sql)
         {
             /* check connection */
             if (mysqli_connect_errno()) {
-                printf("Connect failed: %s\n", mysqli_connect_error());
+                $errMsg = mysqli_connect_error();
+                header("HTTP/1.1 500 mysql::connect(): $errMsg");
                 exit();
             }
-            if ($result = mysqli_query($this->conn, $sql)) {
+            if ($result = mysqli_query(self::$conn, $sql)) {
                 $rows = array();
                 while ($r = mysqli_fetch_assoc($result)) {
                     $rows[] = $r;
@@ -36,4 +40,4 @@
             }
         }
     }
-    $mysql = new MySQL();
+    mysql::connect();
