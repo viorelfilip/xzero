@@ -1,8 +1,12 @@
 .game-container{
+    position:fixed;
     display: grid;
     grid-template-columns: repeat(3, auto);
     width: 50px;
     margin: 50px;
+    padding-right:30em;
+    top: 20em;
+    left: 2em;
 }
 
 .game-cell{
@@ -17,8 +21,34 @@
     cursor: pointer;
 } 
 
+.game-container2{
+    position:fixed;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 50px;
+    margin: 50px;
+    top: 20em;
+    left: 40em;
+}
+
+
+.game-cell2{
+    background: #088bcc;
+    border: 1px solid #000000;
+    width: 10rem;
+    height: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000000;
+    cursor: pointer;
+} 
+
 .imgbox img{
     position: absolute;
-    top: 20%;
-    left: 30%;  
+    top: 4em;
+    left: 30em;  
+ 
+  
 }
+
