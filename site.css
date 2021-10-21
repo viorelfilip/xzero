@@ -45,10 +45,8 @@
 } 
 
 .imgbox img{
-    position: absolute;
+    position: fixed;
     top: 4em;
     left: 30em;  
- 
-  
 }
 
