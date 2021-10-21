@@ -9,14 +9,19 @@
 </head>
 <body>
     <section>
-        <h1 class="gameTitle">Jocul X / O</h1>
-        <h2 class="loggedUser"></h2>
-        <div class="players"></div>
+        <h1 class="gameTitle" style="text-align:center" >Play X / O</h1> 
+        <hr>
+        <h4 class="loggedUser"></h4>
+        <h4 class="players"></h4>
+        <p id="score"  style="display: none; text-align: center;" >Score:
+            X:<span id="playerX">0 </span> 
+            O:<span id="playerO">0 </span>
+        </p>
         <p>
-            <button  onclick="showData()">Incarca joc</button> 
+            <button id="loadData" onclick="showData()">Load Game</button> 
         </p>
         <div class="container" id="game" ></div>
-        
+
         <script src="index.js"></script>
     </section>
    
