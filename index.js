@@ -103,4 +103,4 @@ function clickOnCell(cell){
 
 
 
-
+document.onreadystatechange = () => showData();
