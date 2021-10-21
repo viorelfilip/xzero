@@ -1,4 +1,3 @@
-
 let loggedUser = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
@@ -22,6 +21,8 @@ let games = [ // doar jocurile utilizatorului conectat
     }
 ];
 
+var audio = new Audio('sound.wav'); 
+
 function gameOver(){
     let game = games[0];
     let wins = ['OOO', 'XXX']
@@ -41,7 +42,9 @@ function gameOver(){
         return alert('Gata joc');
     if(~wins.indexOf(game.c3+game.c5+game.c7))
         return alert('Gata joc');
+    audio.play();
 }
+
 
 function showData() {
     showGames();
