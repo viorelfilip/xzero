@@ -1,7 +1,8 @@
 let loggedUser = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
-    { id: 2, email: 'emeric.lacatus@gmail.com' }
+    { id: 2, email: 'emeric.lacatus@gmail.com' },
+    { id: 3, email: 'ioana.pop@gmail.com' }
 ];
 
 let currPlayer = 1;
@@ -22,48 +23,53 @@ let games = [ // doar jocurile utilizatorului conectat
         c6: null,
         c7: null,
         c8: null,
-        c9: null 
+        c9: null
+    },
+    {
+        id: 2,
+        idUser1: 1,
+        idUser2: 3,
+        c1: null,
+        c2: null,
+        c3: null,
+        c4: null,
+        c5: null,
+        c6: null,
+        c7: null,
+        c8: null,
+        c9: null
     }
 ];
 
-// const cloneGames = Object.assign({}, games);
-// console.log(cloneGames);
 
-function gameOver(){
-    let game = games[0];
-    let wins = ['OOO', 'XXX']
-    if(~wins.indexOf(game.c1+game.c2+game.c3))
-        return alert('Gata joc');
-    if(~wins.indexOf(game.c4+game.c5+game.c6))
-        return alert('Gata joc');
-    if(~wins.indexOf(game.c7+game.c8+game.c9))
-        return alert('Gata joc');
-}
+// function gameOver() {
+//     let game = games[0];
+//     let wins = ['OOO', 'XXX']
+//     if (~wins.indexOf(game.c1 + game.c2 + game.c3))
+//         return alert('Gata joc');
+//     if (~wins.indexOf(game.c4 + game.c5 + game.c6))
+//         return alert('Gata joc');
+//     if (~wins.indexOf(game.c7 + game.c8 + game.c9))
+//         return alert('Gata joc');
+// }
 
 function showData() {
     document.getElementById('loadData').style.display = "none";
-    document.getElementById('score').style.display = "";
+    //document.getElementById('score').style.display = "";
     showGames();
     showLoggedUser();
 }
 
 function showLoggedUser() {
     let el = document.getElementsByClassName("loggedUser")[0];
-    el.innerHTML = 'Player 1: ' + users.filter(u => u.id === loggedUser)[0].email;
+    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUser)[0].email;
 
 
 }
 
-function showGames() {
-    let game = games[0];
-    let el = document.getElementById('game');
-    let players = document.getElementsByClassName("players")[0];
-
-
-    let opUser1 = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
-    let email = users.filter(u => u.id === opUser1)[0].email;
-    players.innerHTML = `<p> Player 2: ${email}</p>`;
-
+function grid(game) {
+    let el = document.createElement('div');
+    el.className = "container";
 
     el.innerHTML += `<div id="c1" onClick="clickCell(this)" class="game-cell">${game.c1 || ''}</div>`;
     el.innerHTML += `<div id="c2" onClick="clickCell(this)" class="game-cell">${game.c2 || ''}</div>`;
@@ -75,7 +81,34 @@ function showGames() {
     el.innerHTML += `<div id="c8" onClick="clickCell(this)" class="game-cell">${game.c8 || ''}</div>`;
     el.innerHTML += `<div id="c9" onClick="clickCell(this)" class="game-cell">${game.c9 || ''}</div>`;
 
+    return el;
 
+}
+
+function showGames() {
+
+    for (let i = 0; i < games.length; i++) {
+        let game = games[i];
+       // let players = document.getElementsByClassName("players")[0];
+        let gameContainer = document.getElementById("gameContainer");
+        //let gameContainer = document.createElement('div');
+
+        let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
+        let email = users.filter(u => u.id === opUser)[0].email;
+        //players.innerHTML = `<p> Opposite player : ${email}</p>`;
+
+        let player = document.createElement('p');
+        player.innerHTML = `<p style="text-align:center;"> Opposite player : ${email}</p>`;
+
+        let score = document.createElement('p');
+        score.innerHTML = `Score:
+        X:<span id="playerX"> 0 </span>
+        O:<span id="playerO" > 0 </span>`;
+
+        gameContainer.appendChild(player);
+        gameContainer.appendChild(score);
+        gameContainer.appendChild(grid(game));
+    }
 }
 
 
@@ -137,8 +170,15 @@ function restartGame() {
         }
 
     }
-    document.getElementById('game').innerHTML = "";
-    showData();
+    for (let prop in games[1]) {
+        if (prop != 'id' && prop != 'idUser1' && prop != 'idUser2') {
+            games[1][prop] = null;
+            console.log(games[1][prop]);
+        }
+
+    }
+   // document.getElementById('game').innerHTML = "";
+    showData(); 
 }
 
 
@@ -154,9 +194,9 @@ function scoreGame() {
 }
 function getGames() {
     fetch('api/query.php?query=games-by-user&id=1')
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(console.error);
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(console.error);
 }
 
 

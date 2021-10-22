@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,23 +8,33 @@
     <link rel="stylesheet" href="site.css">
     <title>Document</title>
 </head>
+
 <body>
     <section>
-        <h1 class="gameTitle" style="text-align:center" >Play X / O</h1> 
+        <h1 class="gameTitle" style="text-align:center">Play X / O</h1>
         <hr>
         <h4 class="loggedUser"></h4>
-        <h4 class="players"></h4>
-        <p id="score"  style="display: none; text-align: center;" >Score:
-            X:<span id="playerX">0 </span> 
-            O:<span id="playerO">0 </span>
-        </p>
+
         <p>
-            <button id="loadData" onclick="showData()">Load Game</button> 
+            <button id="loadData" onclick="showData()">Load Game</button>
         </p>
-        <div class="container" id="game" ></div>
+        <div class="gameC" id="gameContainer">
+            <h4 class="players"></h4>
+            <!-- <p id="score" style="display: none; text-align: center;">Score:
+                X:<span id="playerX">0 </span>
+                O:<span id="playerO">0 </span>
+            </p> -->
+            <!-- grid -->
+        </div>
+
+
+        <!-- <div class="container"></div> -->
+        <hr>
 
         <script src="index.js"></script>
+        <script src="test.js"></script>
     </section>
-   
+
 </body>
+
 </html>
