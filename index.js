@@ -153,10 +153,10 @@ function clickOnCell(cell){
         currentPlayer = 1;
     }
     if (symbol == "X") {
-        cell.style.backgroundColor = "red";
+        cell.style.backgroundColor = '#FF4500';
     } else {
         symbol == "O";
-        cell.style.backgroundColor = "yellow";
+        cell.style.backgroundColor = '#6495ED';
     }
 
     
@@ -182,10 +182,10 @@ function clickOnCell2(cell2){
         currentPlayer2 = 3;
     }
     if (symbol2 == "X") {
-        cell2.style.backgroundColor = "red";
+        cell2.style.backgroundColor = '#FF4500';
     } else {
         symbol2 == "O";
-        cell2.style.backgroundColor = "yellow";
+        cell2.style.backgroundColor = '#6495ED';
     }
 
     
@@ -200,7 +200,7 @@ function restartGame(){
     currentPlayer=1;
     for(let i=0;i<=8;i++){
         document.getElementsByClassName('game-cell')[i].innerHTML="";
-        document.getElementsByClassName('game-cell')[i].style.backgroundColor = '#088bcc';
+        document.getElementsByClassName('game-cell')[i].style.backgroundColor = '#FFE4C4';
     }
     games[0].c1=null;
     games[0].c2=null;
@@ -220,7 +220,7 @@ function restartGame2(){
     currentPlayer=3;
     for(let i=0;i<=8;i++){
         document.getElementsByClassName('game-cell2')[i].innerHTML="";
-        document.getElementsByClassName('game-cell2')[i].style.backgroundColor = '#088bcc';
+        document.getElementsByClassName('game-cell2')[i].style.backgroundColor = '#FFE4C4';
     }
     games2[0].c1_2=null;
     games2[0].c2_2=null;
