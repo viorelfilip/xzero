@@ -1,7 +1,6 @@
 div.game-cell{
-    background-color: bisque;
-    width: 3rem;
-    height: 3rem;
+    width: 10rem;
+    height: 10rem;
     margin: 0.2rem;
     text-align: center;
     font-weight: bolder;
@@ -9,4 +8,18 @@ div.game-cell{
     align-items: center;
     justify-content: center;
     display: flex;
+    border: 1px solid black;
+    cursor: pointer;
+  
+}
+div.container{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 460px;
+    margin: auto;
+    padding: 100px;
+   
+}
+h4{
+    text-align: center;
 }
