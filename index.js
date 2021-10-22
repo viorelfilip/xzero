@@ -120,7 +120,6 @@ function getGames() {
     .catch(console.error);
 }
 
-<<<<<<< HEAD
 
 
 
@@ -129,6 +128,3 @@ function getGames() {
 
 
 
-=======
-document.onreadystatechange = () => showData();
->>>>>>> master
