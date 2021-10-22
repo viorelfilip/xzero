@@ -21,19 +21,22 @@ let games = [ // doar jocurile utilizatorului conectat
     }
 ];
 
-/*function reset(){
-    let game = games[0];
-    let el = document.getElementById('game');
-    el.innerHTML += `<div id="c1" onClick="clickCell(this)" class="game-cell">game.c1= null</div>`;
-    el.innerHTML += `<div id="c2" onClick="clickCell(this)" class="game-cell">game.c2= null</div>`;
-    el.innerHTML += `<div id="c3" onClick="clickCell(this)" class="game-cell">game.c3= null</div>`;
-    el.innerHTML += `<div id="c4" onClick="clickCell(this)" class="game-cell">game.c4= null</div>`;
-    el.innerHTML += `<div id="c5" onClick="clickCell(this)" class="game-cell">game.c5= null</div>`;
-    el.innerHTML += `<div id="c6" onClick="clickCell(this)" class="game-cell">game.c6= null</div>`;
-    el.innerHTML += `<div id="c7" onClick="clickCell(this)" class="game-cell">game.c7= null</div>`;
-    el.innerHTML += `<div id="c8" onClick="clickCell(this)" class="game-cell">game.c8= null</div>`;
-    el.innerHTML += `<div id="c9" onClick="clickCell(this)" class="game-cell">game.c9= null</div>`;    
-}*/
+let games1 = [ // doar jocurile utilizatorului conectat
+  {
+      id: 1,
+      cl1: null,
+      cl2: null,
+      cl3: null,
+      cl4: null,
+      cl5: null,
+      cl6: null,
+      cl7: null,
+      cl8: null,
+      cl9: null
+  }
+];
+
+
 
 function gameOver(){
   let game = games[0];
@@ -41,60 +44,114 @@ function gameOver(){
  
 
   if(game.c1+game.c2+game.c3 ==='XXX'){
-    return alert('x a castigat');
+    return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c1+game.c2+game.c3 === 'OOO'){
-    return alert('o a castigat');
+    return alert('Primul joc s-a terminat! A castigat O!');
   }
   
   
   if(game.c4+game.c5+game.c6 ==='XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
     }else if(game.c4+game.c5+game.c6 ==='OOO'){
-    return alert('O a castigat');}
+    return alert('Primul joc s-a terminat! A castigat O!');}
   
 
   if(game.c7+game.c8+game.c9 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c7+game.c8+game.c9 === 'OOO'){
-    return alert('o a castigat'); }
+    return alert('Primul joc s-a terminat! A castigat O!'); }
 
   if(game.c1+game.c4+game.c7 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c1+game.c4+game.c7 === 'OOO'){
-  return alert('o a castigat');}
+  return alert('Primul joc s-a terminat! A castigat O!');}
 
   if(game.c2+game.c5+game.c8 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c2+game.c5+game.c8 === 'OOO'){
-    return alert('o a castigat');
+    return alert('Primul joc s-a terminat! A castigat O!');
   }
 
 
   if(game.c3+game.c6+game.c9 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c3+game.c6+game.c9 === 'OOO'){
-    return alert('o a castigat');
+    return alert('Primul joc s-a terminat! A castigat O!');
   }
 
   if(game.c1+game.c5+game.c9 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c1+game.c5+game.c9 === 'OOO'){
-    return alert('o a castigat');
+    return alert('Primul joc s-a terminat! A castigat O!');
   }
 
 
   if(game.c3+game.c5+game.c7 === 'XXX'){
-      return alert('x a castigat');
+      return alert('Primul joc s-a terminat! A castigat X!');
   }else if(game.c3+game.c5+game.c7 === 'OOO'){
-    return alert('o a castigat');
+    return alert('Primul joc s-a terminat! A castigat O!');
   }
 
      
 }
 
 
+function gameOver1(){
+  let game1 = games1[0];
+  //let wins = ['OOO', 'XXX']
+ 
+
+  if(game1.cl1+game1.cl2+game1.cl3 ==='XXX'){
+    return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl1+game1.cl2+game1.cl3 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');
+  }
+  
+  
+  if(game1.cl4+game1.cl5+game1.cl6 ==='XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+    }else if(game1.cl4+game1.cl5+game1.cl6 ==='OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');}
+  
+
+  if(game1.cl7+game1.cl8+game1.cl9 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl7+game1.cl8+game1.cl9 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!'); }
+
+  if(game1.cl1+game1.cl4+game1.cl7 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl1+game1.cl4+game1.cl7 === 'OOO'){
+  return alert('Al doilea joc s-a terminat! A castigat O!');}
+
+  if(game1.cl2+game1.cl5+game1.cl8 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl2+game1.cl5+game1.cl8 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');
+  }
 
 
+  if(game1.cl3+game1.cl6+game1.cl9 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl3+game1.cl6+game1.cl9 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');
+  }
+
+  if(game1.cl1+game1.cl5+game1.cl9 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl1+game1.cl5+game1.cl9 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');
+  }
+
+
+  if(game1.cl3+game1.cl5+game1.cl7 === 'XXX'){
+      return alert('Al doilea joc s-a terminat! A castigat X!');
+  }else if(game1.cl3+game1.cl5+game1.cl7 === 'OOO'){
+    return alert('Al doilea joc s-a terminat! A castigat O!');
+  }
+
+  
+}
 
 
 function showData() {
@@ -109,6 +166,10 @@ function showLoggedUser() {
 function showGames() {
     let game = games[0];
     let el = document.getElementById('game');
+
+    let game1 = games1[0];
+    let el1 = document.getElementById('game1');
+
     let players = document.getElementsByClassName("players")[0];
 
     let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
@@ -125,9 +186,20 @@ function showGames() {
     el.innerHTML += `<div id="c7" onClick="clickCell(this)" class="game-cell">${game.c7 || ''}</div>`;
     el.innerHTML += `<div id="c8" onClick="clickCell(this)" class="game-cell">${game.c8 || ''}</div>`;
     el.innerHTML += `<div id="c9" onClick="clickCell(this)" class="game-cell">${game.c9 || ''}</div>`; 
+
+    el1.innerHTML += `<div id="cl1" onClick="clickCell1(this)" class="game-cell">${game1.cl1 || ''}</div>`;
+    el1.innerHTML += `<div id="cl2" onClick="clickCell1(this)" class="game-cell">${game1.cl2 || ''}</div>`;
+    el1.innerHTML += `<div id="cl3" onClick="clickCell1(this)" class="game-cell">${game1.cl3 || ''}</div>`;
+    el1.innerHTML += `<div id="cl4" onClick="clickCell1(this)" class="game-cell">${game1.cl4 || ''}</div>`;
+    el1.innerHTML += `<div id="cl5" onClick="clickCell1(this)" class="game-cell">${game1.cl5 || ''}</div>`;
+    el1.innerHTML += `<div id="cl6" onClick="clickCell1(this)" class="game-cell">${game1.cl6 || ''}</div>`;
+    el1.innerHTML += `<div id="cl7" onClick="clickCell1(this)" class="game-cell">${game1.cl7 || ''}</div>`;
+    el1.innerHTML += `<div id="cl8" onClick="clickCell1(this)" class="game-cell">${game1.cl8 || ''}</div>`;
+    el1.innerHTML += `<div id="cl9" onClick="clickCell1(this)" class="game-cell">${game1.cl9 || ''}</div>`;
+
+  
 }
   
-
 
 
 let currPlayer = 1;
@@ -152,5 +224,24 @@ function clickCell(cell){
 }
 
 
+let currPlayer1 = 1;
 
+function clickCell1(cell){
+  console.log(cell.id);
+  if(cell.innerHTML === 'X' || cell.innerHTML === 'O'){
+    return;
+  }
+  let symbol = "";
+  if(currPlayer1 == 1){
+    symbol = "X"
+    currPlayer1 = 2;
+  } else{
+    symbol = "O";
+    currPlayer1 = 1;
+  }
+  cell.innerHTML = symbol;
+  games1[0][cell.id] = symbol;
+  gameOver1();
+    
+}
 

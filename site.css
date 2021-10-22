@@ -5,8 +5,8 @@ body{
 
 div.game-cell{
     background-color: orchid;
-    width: 8rem;
-    height: 8rem;
+    width: 3rem;
+    height: 3rem;
     margin: 0.2rem;
     text-align: center;
     font-weight: bolder;
@@ -21,9 +21,11 @@ div.game-cell{
 div.container{
     display: grid;
     grid-template-columns: repeat(3, auto);
-    width: 50px;
-    margin: 50px;
+    width: 30px;
+    margin: 30px;
 }
+
+
 
 
 
