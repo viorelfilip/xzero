@@ -33,24 +33,21 @@
                 exit();
             }
             if (!empty($params)) {
-                //echo $sql;
-                //print_r($params);
-                // foreach($params as $p){
-                //     echo $p . "\n";
-                // }
                 $stmt = self::$conn->prepare($sql);
-                foreach ($params as $p) {
-                    $stmt->bind_param('s', $p); // bind all as string
-                }
+                // foreach ($params as $p) {
+                //     $stmt->bind_param('s', $p); // bind all as string
+                // }
+                $types = str_repeat('s', count($params)); // bind all as string
+                $stmt->bind_param($types, ...$params); // bind array at once;
                 $stmt->execute();
                 $result = $stmt->get_result();
             } else {
                 $result = mysqli_query(self::$conn, $sql);
             }
-            while ($row = $result->fetch_assoc()) {
-                $rows[] = $row;
-            }
-            mysqli_free_result($result); // free the result set
+            // while ($row = $result->fetch_assoc()) {
+            //     $rows[] = $row;
+            // }
+            // mysqli_free_result($result); // free the result set
             if (!empty($stmt)) {
                 $stmt->close();
             }
