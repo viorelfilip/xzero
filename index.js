@@ -51,8 +51,6 @@ let games = [ // doar jocurile utilizatorului conectat
 ];
 
 function showData() {
-    document.getElementById('loadData').style.display = "none";
-    //document.getElementById('score').style.display = "";
     showGames();
     showLoggedUser();
 }
@@ -149,6 +147,7 @@ function scoreGame(game) {
     document.getElementById('playerX').innerHTML = playerX;
     document.getElementById('playerO').innerHTML = playerO;
 }
+
 function getGames() {
     fetch('api/query.php?query=games-by-user&id=1')
         .then(response => response.json())
