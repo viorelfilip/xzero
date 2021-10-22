@@ -152,6 +152,12 @@ function scoreGame() {
     document.getElementById('playerO').innerHTML = playerO;
 
 }
+function getGames() {
+    fetch('api/query.php?query=games-by-user&id=1')
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(console.error);
+}
 
 
 function clickCell(cell) {
