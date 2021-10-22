@@ -50,18 +50,6 @@ let games = [ // doar jocurile utilizatorului conectat
     }
 ];
 
-
-// function gameOver() {
-//     let game = games[0];
-//     let wins = ['OOO', 'XXX']
-//     if (~wins.indexOf(game.c1 + game.c2 + game.c3))
-//         return alert('Gata joc');
-//     if (~wins.indexOf(game.c4 + game.c5 + game.c6))
-//         return alert('Gata joc');
-//     if (~wins.indexOf(game.c7 + game.c8 + game.c9))
-//         return alert('Gata joc');
-// }
-
 function showData() {
     document.getElementById('loadData').style.display = "none";
     //document.getElementById('score').style.display = "";
@@ -81,7 +69,7 @@ function grid(game) {
     conf.cells.forEach(i => {
         el.innerHTML += `<div id="c${i}_${idx}" onClick="clickCell(this,${idx})" class="game-cell" style="background-color: ${conf.dcolor}">${game.c1 || ''}</div>`;
     })
-    el.innerHTML += `<button onClick="reset(${idx})" class="btn-reset">Reset</button>`;
+    el.innerHTML += `<button onClick="reset(${idx})" class="btn btn-lg btn-primary"><i class="fa fa-fw fa-undo"></i> Reset</button>`;
     return el;
 }
 
@@ -147,7 +135,7 @@ function reset(idx) {
             let el = document.getElementById(`c${i}_${idx}`);
             el.innerHTML = '';
             el.innerText = '';
-            el.style.backgroundColor = 'bisque';
+            el.style.backgroundColor = conf.dcolor;
         })
 }
 
