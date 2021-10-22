@@ -32,7 +32,11 @@ while ($query = current($queries)) {
     if (key($queries) == $_GET["query"]) {
         if (strpos($query, '?') !== false) {
             array_shift($_GET);
-            mysql::query($query, $_GET);
+            $params= array();
+            foreach ($_GET as $key => $value) {
+                $params[]=$value;
+            }
+            mysql::query($query, $params);
         } else {
             mysql::query($query);
         }
