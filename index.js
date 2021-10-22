@@ -5,6 +5,15 @@ let users = [ // lista completa de jucatori
     { id: 3, email: 'ioana.pop@gmail.com' }
 ];
 
+let conf = {
+    cells: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    ocolor: 'lightskyblue',
+    xcolor: 'lightsalmon',
+    dcolor: 'azure',
+    winsound: new Audio("win-sound.mp3"),
+    defsound: new Audio("def-sound.mp3")
+}
+
 let currPlayer = 1;
 
 let playerX = 0;
@@ -63,33 +72,22 @@ function showData() {
 function showLoggedUser() {
     let el = document.getElementsByClassName("loggedUser")[0];
     el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUser)[0].email;
-
-
 }
 
 function grid(game) {
+    let idx = games.indexOf(game);
     let el = document.createElement('div');
     el.className = "container";
-
-    el.innerHTML += `<div id="c1" onClick="clickCell(this)" class="game-cell">${game.c1 || ''}</div>`;
-    el.innerHTML += `<div id="c2" onClick="clickCell(this)" class="game-cell">${game.c2 || ''}</div>`;
-    el.innerHTML += `<div id="c3" onClick="clickCell(this)" class="game-cell">${game.c3 || ''}</div>`;
-    el.innerHTML += `<div id="c4" onClick="clickCell(this)" class="game-cell">${game.c4 || ''}</div>`;
-    el.innerHTML += `<div id="c5" onClick="clickCell(this)" class="game-cell">${game.c5 || ''}</div>`;
-    el.innerHTML += `<div id="c6" onClick="clickCell(this)" class="game-cell">${game.c6 || ''}</div>`;
-    el.innerHTML += `<div id="c7" onClick="clickCell(this)" class="game-cell">${game.c7 || ''}</div>`;
-    el.innerHTML += `<div id="c8" onClick="clickCell(this)" class="game-cell">${game.c8 || ''}</div>`;
-    el.innerHTML += `<div id="c9" onClick="clickCell(this)" class="game-cell">${game.c9 || ''}</div>`;
-
+    conf.cells.forEach(i => {
+        el.innerHTML += `<div id="c${i}_${idx}" onClick="clickCell(this,${idx})" class="game-cell" style="background-color: ${conf.dcolor}">${game.c1 || ''}</div>`;
+    })
+    el.innerHTML += `<button onClick="reset(${idx})" class="btn-reset">Reset</button>`;
     return el;
-
 }
 
 function showGames() {
-
-    for (let i = 0; i < games.length; i++) {
-        let game = games[i];
-       // let players = document.getElementsByClassName("players")[0];
+    for (let game of games) {
+        // let players = document.getElementsByClassName("players")[0];
         let gameContainer = document.getElementById("gameContainer");
         //let gameContainer = document.createElement('div');
 
@@ -111,78 +109,50 @@ function showGames() {
     }
 }
 
-
-function playerWin() {
-
-    let game = games[0];
+function playerWin(game) {
     let wins = ['OOO', 'XXX'];
-    console.log(currPlayer);
-
     if (~wins.indexOf(game.c1 + game.c2 + game.c3)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
     if (~wins.indexOf(game.c1 + game.c4 + game.c7)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
     if (~wins.indexOf(game.c1 + game.c5 + game.c9)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
-
     if (~wins.indexOf(game.c2 + game.c5 + game.c8)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
     if (~wins.indexOf(game.c3 + game.c6 + game.c9)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
-
     if (~wins.indexOf(game.c3 + game.c5 + game.c7)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
     if (~wins.indexOf(game.c4 + game.c5 + game.c6)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
     if (~wins.indexOf(game.c7 + game.c8 + game.c9)) {
-        alert(`Game over! Player ${currPlayer != 1 ? 'X' : 'O'} win! `);
-        scoreGame();
-        restartGame();
+        scoreGame(game);
     }
+    conf.defsound.play();
 }
 
-function restartGame() {
-    for (let prop in games[0]) {
-        if (prop != 'id' && prop != 'idUser1' && prop != 'idUser2') {
-            games[0][prop] = null;
-            console.log(games[0][prop]);
-        }
-
-    }
-    for (let prop in games[1]) {
-        if (prop != 'id' && prop != 'idUser1' && prop != 'idUser2') {
-            games[1][prop] = null;
-            console.log(games[1][prop]);
-        }
-
-    }
-   // document.getElementById('game').innerHTML = "";
-    showData(); 
+function reset(idx) {
+    let game = games[idx];
+    conf
+        .cells
+        .forEach(i => {
+            game[`c${i}`] = null;
+            let el = document.getElementById(`c${i}_${idx}`);
+            el.innerHTML = '';
+            el.innerText = '';
+            el.style.backgroundColor = 'bisque';
+        })
 }
 
-
-function scoreGame() {
+function scoreGame(game) {
+    conf.winsound.play();
     if (currPlayer != 1) {
         playerX++;
     } else {
@@ -190,7 +160,6 @@ function scoreGame() {
     };
     document.getElementById('playerX').innerHTML = playerX;
     document.getElementById('playerO').innerHTML = playerO;
-
 }
 function getGames() {
     fetch('api/query.php?query=games-by-user&id=1')
@@ -199,35 +168,15 @@ function getGames() {
         .catch(console.error);
 }
 
-
-function clickCell(cell) {
-
+function clickCell(cell, idx) {
     if (cell.innerHTML === 'X' || cell.innerHTML === 'O') {
         return;
     }
-    let symbol = "";
-    if (currPlayer == 1) {
-        symbol = "X";
-        currPlayer = 2;
-    } else {
-        symbol = "O";
-        currPlayer = 1;
-    }
-    if (symbol == "X") {
-        cell.style.backgroundColor = "red";
-    } else {
-        symbol == "O";
-        cell.style.backgroundColor = "blue";
-    }
-
+    let game = games[idx];
+    game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
+    let symbol = game.nextMove;
+    cell.style.backgroundColor = symbol == "X" ? conf.xcolor : conf.ocolor;
     cell.innerHTML = symbol;
-    games[0][cell.id] = symbol;
-    playerWin();
-
-
+    game[cell.id.split('_')[0]] = symbol;
+    playerWin(game);
 }
-
-
-
-
-
