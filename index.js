@@ -86,7 +86,7 @@ let games = [ // doar jocurile utilizatorului conectat
             scoreX: 0,
             scoreO: 0
         },
-        nextMove: "X",
+        nextMove: "O",
         c1: null,
         c2: null,
         c3: null,
@@ -118,7 +118,7 @@ function grid(game) {
     let el = document.createElement('div');
     el.className = "container";
 
-    //config cell and button
+    //config cell 
     conf.cells.forEach(i => {
         let propValue = game[`c${i}`];
         el.innerHTML += `<div id="c${i}_${idx}" onClick="clickCell(this,${idx})" 
@@ -161,7 +161,8 @@ function showGames() {
 
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
-
+        
+        //button reset
         divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="btn btn-lg btn-primary" disabled>
         <i class="fa fa-fw fa-undo"></i> Reset</button>`; 
 
@@ -212,7 +213,7 @@ function reset(idx) {
         })
 }
 
-function scoreGame(game, cellValue) { //jucatorul curent are un id (idUser1).verificam daca joaca cu x sau cu o,
+function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu x sau cu o,
     conf.winsound.play();             // in functie de id mergem in game si verificm daca id ul celui care a castigat sau a pierdut e egal cu jucatorul curent
     let idPlayer = cellValue === 'X' ? game.idUser1 : game.idUser2;        
     const gameId = games.indexOf(game);
