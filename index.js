@@ -1,6 +1,6 @@
 import { getPlayers, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
-let loggedUserId = 1; // utilizatorul conectat in aplicatie
+let loggedUserId = 2; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' },
