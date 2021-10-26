@@ -27,10 +27,8 @@ let games = [ // doar jocurile utilizatorului conectat
         id: 1,
         idUser1: 1,
         idUser2: 2,
-        score: {
-            scoreX: 0,
-            scoreO: 0
-        },
+        scorUser1: 0,
+        scorUser2: 0,
         nextMove: "O",
         c1: "X",
         c2: null,
@@ -46,10 +44,8 @@ let games = [ // doar jocurile utilizatorului conectat
         id: 2,
         idUser1: 1,
         idUser2: 3,
-        score: {
-            scoreX: 0,
-            scoreO: 0
-        },
+        scorUser1: 0,
+        scorUser2: 0,
         nextMove: "X",
         c1: 'O',
         c2: null,
@@ -61,33 +57,12 @@ let games = [ // doar jocurile utilizatorului conectat
         c8: 'X',
         c9: null
     },
-    {  
+    {
         id: 3,
         idUser1: 1,
         idUser2: 4,
-        score: {
-            scoreX: 0,
-            scoreO: 0
-        },
-        nextMove: "O",
-        c1: null,
-        c2: null,
-        c3: null,
-        c4: null,
-        c5: null,
-        c6: null,
-        c7: null,
-        c8: null,
-        c9: null
-    },
-    {
-        id: 4,
-        idUser1: 1,
-        idUser2: 5,
-        score: {
-            scoreX: 0,
-            scoreO: 0
-        },
+        scorUser1: 0,
+        scorUser2: 0,
         nextMove: "O",
         c1: null,
         c2: null,
@@ -99,7 +74,6 @@ let games = [ // doar jocurile utilizatorului conectat
         c8: null,
         c9: null
     }
-    
 ];
 
 export function loadGames() {
@@ -123,11 +97,11 @@ function grid(game) {
     let idx = games.indexOf(game);
     let el = document.createElement('div');
     el.className = "container";
-
+    el.id = `game_${idx}`;
     //config cell 
     conf.cells.forEach(i => {
         let propValue = game[`c${i}`];
-        el.innerHTML += `<div id="c${i}_${idx}" onClick="clickCell(this,${idx})" 
+        el.innerHTML += `<div id="c${i}" onClick="clickCell(this,${idx})" 
         class="game-cell" style="background-color: ${propValue === null ? conf.dcolor : setColor(propValue)}">
         ${propValue || ''} </div>`;
     })
@@ -147,7 +121,7 @@ function showGames() {
         divState.className = "status";
 
         //opp player
-        let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
+        let opUser = (game.idUser1 === loggedUserId ? game.idUser2 : game.idUser1);
         let email = users.filter(u => u.id === opUser)[0].email;
         let player = document.createElement('p');
         player.innerHTML = `Player : ${email}`;
@@ -162,15 +136,15 @@ function showGames() {
 
         //state game
         let status = document.createElement("p");
-        status.innerHTML = `It's turn of player: <span id="status${idx}">${game.nextMove === 'X' ? 'O' : 'X'}</span>`; 
+        status.innerHTML = `It's turn of player: <span id="status${idx}">${game.nextMove === 'X' ? 'O' : 'X'}</span>`;
         divState.appendChild(status);
 
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
-        
+
         //button reset
         divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="btn btn-lg btn-primary" disabled>
-        <i class="fa fa-fw fa-undo"></i> Reset</button>`; 
+        <i class="fa fa-fw fa-undo"></i> Reset</button>`;
 
     }
 
@@ -179,7 +153,7 @@ function showGames() {
 
 function playerWin(game) { //aici ar trebui sa verificam cine a castigat. id1 sau id2 pt afisare scor.
     let wins = ['OOO', 'XXX'];
-    if (~wins.indexOf(game.c1 + game.c2 + game.c3)){
+    if (~wins.indexOf(game.c1 + game.c2 + game.c3)) {
         scoreGame(game, game.c1);
     }
     if (~wins.indexOf(game.c1 + game.c4 + game.c7)) {
@@ -223,17 +197,22 @@ function reset(idx) {
 
 function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu x sau cu o,
     conf.winsound.play();             // in functie de id mergem in game si verificm daca id ul celui care a castigat sau a pierdut e egal cu jucatorul curent
-    let idPlayer = cellValue === 'X' ? game.idUser1 : game.idUser2;        
+    if (cellValue === 'X') {
+        if (game.idUser1 == game.userX) game.scorUser1++;
+        else game.scorUser2++;
+    } else {
+        if (game.idUser1 == game.userX) game.scorUser2++;
+        else game.scorUser1++;
+    }
+
     const gameId = games.indexOf(game);
 
-    if(idPlayer === game?.idUser1){          
+    if (idPlayer === game?.idUser1) {
         game.score.scoreX++;
     } else {
         game.score.scoreO++;
     };
     document.getElementById(`btn${gameId}`).disabled = false;
-    
-   
     document.getElementById(`playerX${gameId}`).innerHTML = game.score.scoreX;
     document.getElementById(`playerO${gameId}`).innerHTML = game.score.scoreO;
 
@@ -257,11 +236,10 @@ function clickCell(cell, idx) {
 
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
-    game[cell.id.split('_')[0]] = symbol;
+    game[cell.id] = symbol;
     game[cell.id] = symbol;
     saveMove(cell.id, symbol, game.id);
     playerWin(game);
-   
 }
 
 function setColor(symbol) {
@@ -269,9 +247,9 @@ function setColor(symbol) {
 }
 
 
-function gameOver(){
- 
- 
+function gameOver() {
+
+
 }
 
 
