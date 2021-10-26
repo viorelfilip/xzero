@@ -10,16 +10,15 @@ div.game-cell{
     display: inline-flex;
     border: 1px solid black;
     cursor: pointer;
-  
 }
-div.container{
+
+div.game-container {
     display: grid;
     grid-template-columns: repeat(3, auto);
     margin: auto;
-
-   
 }
-h4{
+
+h4 {
     text-align: center;
 }
 

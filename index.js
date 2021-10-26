@@ -1,4 +1,6 @@
-let loggedUser = 1; // utilizatorul conectat in aplicatie
+import { saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+
+let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' },
@@ -100,16 +102,20 @@ let games = [ // doar jocurile utilizatorului conectat
     
 ];
 
-
-
-function showData() {
-    showGames();
-    showLoggedUser();
-
+export function loadGames() {
+    gamesByUser(loggedUserId)
+        .then(response => response.json())
+        .then(data => {
+            games = data;
+            showGames();
+            showLoggedUser();
+            console.warn(data);
+        })
 }
+
 function showLoggedUser() {
     let el = document.getElementsByClassName("loggedUser")[0];
-    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUser)[0].email;
+    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUserId)[0].email;
 }
 
 
@@ -206,11 +212,13 @@ function reset(idx) {
         .cells
         .forEach(i => {
             game[`c${i}`] = null;
-            let el = document.getElementById(`c${i}_${idx}`);
-            el.innerHTML = '';
-            el.innerText = '';
-            el.style.backgroundColor = conf.dcolor;
+            let gameEl = document.querySelector(`#game_${idx}`);
+            let cellEl = gameEl.querySelector(`#c${i}`);
+            cellEl.innerHTML = '';
+            cellEl.innerText = '';
+            cellEl.style.backgroundColor = conf.dcolor;
         })
+    saveReset(game.id);
 }
 
 function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu x sau cu o,
@@ -250,6 +258,8 @@ function clickCell(cell, idx) {
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
     game[cell.id.split('_')[0]] = symbol;
+    game[cell.id] = symbol;
+    saveMove(cell.id, symbol, game.id);
     playerWin(game);
    
 }
@@ -274,3 +284,5 @@ function gameOver(){
 //utilizatorul curent cu id1 are doua jocuri in asteptare: 1 in care el trebuie sa faca mutarea, 
 // si al doilea in care sa astepte dupa jucator;
 //afisare mesaj "turn of player x, sau turn of player o";
+window.clickCell = clickCell;
+window.reset = reset;
