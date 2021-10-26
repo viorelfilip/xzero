@@ -8,15 +8,15 @@ $queries = array( // declare here all the queries
     'new-game'       => 'insert into games(idUser1, idUser2) values(?, ?)',
     'new-user'       => 'insert into users(email,password) values(?, ?)',
     'reset-game' => "update games set c1=null,c2=null,c3=null,c4=null,c5=null,c6=null,c7=null,c8=null,c9=null,nextMove='X',userX=IF(userX=idUser1, idUser2, idUser1) where id=?",
-    'set-game-c1'    => 'update games set c1=? where id=?',
-    'set-game-c2'    => 'update games set c2=? where id=?',
-    'set-game-c3'    => 'update games set c3=? where id=?',
-    'set-game-c4'    => 'update games set c4=? where id=?',
-    'set-game-c5'    => 'update games set c5=? where id=?',
-    'set-game-c6'    => 'update games set c6=? where id=?',
-    'set-game-c7'    => 'update games set c7=? where id=?',
-    'set-game-c8'    => 'update games set c8=? where id=?',
-    'set-game-c9'    => 'update games set c9=? where id=?'
+    'set-game-c1'    => "update games set c1=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c2'    => "update games set c2=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c3'    => "update games set c3=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c4'    => "update games set c4=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c5'    => "update games set c5=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c6'    => "update games set c6=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c7'    => "update games set c7=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c8'    => "update games set c8=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-c9'    => "update games set c9=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?"
 );
 
 if (!empty($argv)) { // for debug scenario, command line get params
