@@ -46,7 +46,8 @@
                 mysqli_free_result($result); // free the result set
                 print json_encode($rows); // return as json array
             } else { // INSERT || UPDATE
-                print '{"message":"'.$stmt->affected_rows.' affected rows"';
+                header('Content-Type: application/json; charset=utf-8');
+                print '{"message":"'.$stmt->affected_rows.' affected rows"}';
             }
             $stmt->close();
         }

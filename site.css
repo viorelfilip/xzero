@@ -1,6 +1,6 @@
-div.game-cell{
-    width: 10rem;
-    height: 10rem;
+div.game-cell {
+    width: 4rem;
+    height: 4rem;
     margin: 0.2rem;
     text-align: center;
     font-weight: bolder;
@@ -10,16 +10,17 @@ div.game-cell{
     display: flex;
     border: 1px solid black;
     cursor: pointer;
-  
 }
-div.container{
+
+div.game-container {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    width: 460px;
+    width: 14rem;
     margin: auto;
-    padding: 100px;
-   
+    /* padding: 100px; */
+    background-color: burlywood;
 }
-h4{
+
+h4 {
     text-align: center;
 }

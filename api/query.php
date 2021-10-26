@@ -7,7 +7,7 @@ $queries = array( // declare here all the queries
     'games-by-user'  => 'select * from games where ? in (idUser1, idUser2)',
     'new-game'       => 'insert into games(idUser1, idUser2) values(?, ?)',
     'new-user'       => 'insert into users(email,password) values(?, ?)',
-    'set-game-by-id' => 'update games set c1=?,c2=?,c3=?,c4=?,c5=?,c6=?,c7=?,c8=?,c9=? where id=?',
+    'reset-game' => 'update games set c1=null,c2=null,c3=null,c4=null,c5=null,c6=null,c7=null,c8=null,c9=null where id=?',
     'set-game-c1'    => 'update games set c1=? where id=?',
     'set-game-c2'    => 'update games set c2=? where id=?',
     'set-game-c3'    => 'update games set c3=? where id=?',
@@ -23,17 +23,33 @@ if (!empty($argv)) { // for debug scenario, command line get params
     parse_str(implode('&', array_slice($argv, 1)), $_GET);
 }
 
-if (!(array_key_exists("query", $_GET))) {
-    header('HTTP/1.1 400 Bad Request {"query": "param <query> is required"}');
-    exit;
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (!(array_key_exists("query", $_GET))) {
+        header('HTTP/1.1 400 Bad Request {"query": "param <query> is required"}');
+        exit;
+    }
+    $queryKey = $_GET["query"];
+} else {
+    $_POST = json_decode(file_get_contents('php://input'), true);
+    if (!(array_key_exists("query", $_POST))) {
+        header('HTTP/1.1 400 Bad Request {"query": "param <query> is required"}');
+        exit;
+    }
+    $queryKey = $_POST["query"];
 }
 
 while ($query = current($queries)) {
-    if (key($queries) == $_GET["query"]) {
+    if (key($queries) == $queryKey) {
         if (strpos($query, '?') !== false) {
-            array_shift($_GET);
-            $params= array();
-            foreach ($_GET as $key => $value) {
+            $params = array();
+            if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+                array_shift($_GET);
+                $values = $_GET;
+            } else {
+                array_shift($_POST);
+                $values = $_POST;
+            }
+            foreach ($values as $key => $value) {
                 $params[]=$value;
             }
             mysql::query($query, $params);
@@ -44,6 +60,3 @@ while ($query = current($queries)) {
     }
     next($queries);
 }
-
-// $query = $_GET["query"];
-// mysql::query($query);

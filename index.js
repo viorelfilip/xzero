@@ -1,4 +1,6 @@
-let loggedUser = 1; // utilizatorul conectat in aplicatie
+import { saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+
+let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' },
@@ -50,48 +52,52 @@ let games = [ // doar jocurile utilizatorului conectat
     }
 ];
 
-function showData() {
-    showGames();
-    showLoggedUser();
+export function loadGames() {
+    gamesByUser(loggedUserId)
+        .then(response => response.json())
+        .then(data => {
+            games = data;
+            showGames();
+            showLoggedUser();
+            console.warn(data);
+        })
 }
 
 function showLoggedUser() {
     let el = document.getElementsByClassName("loggedUser")[0];
-    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUser)[0].email;
+    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUserId)[0].email;
 }
 
 function grid(game) {
     let idx = games.indexOf(game);
     let el = document.createElement('div');
-    el.className = "container";
+    el.className = "game-container";
+    el.id = `game_${idx}`;
     conf.cells.forEach(i => {
-        el.innerHTML += `<div id="c${i}_${idx}" onClick="clickCell(this,${idx})" class="game-cell" style="background-color: ${conf.dcolor}">${game.c1 || ''}</div>`;
+        let color = conf.dcolor;
+        let val = game[`c${i}`] || '';
+        if (val) color = (val === 'X' ? conf.xcolor : conf.ocolor);
+        el.innerHTML += `<div id="c${i}" onClick="clickCell(this,${idx})" class="game-cell" style="background-color: ${color}">${val}</div>`;
     })
-    el.innerHTML += `<button onClick="reset(${idx})" class="btn btn-lg btn-primary"><i class="fa fa-fw fa-undo"></i> Reset</button>`;
+    el.innerHTML += `<div class="row"><button onClick="reset(${idx})" class="btn btn-lg btn-primary"><i class="fa fa-fw fa-undo"></i> Reset</button></div>`;
     return el;
 }
 
 function showGames() {
     for (let game of games) {
-        // let players = document.getElementsByClassName("players")[0];
-        let gameContainer = document.getElementById("gameContainer");
-        //let gameContainer = document.createElement('div');
-
-        let opUser = (game.idUser1 === loggedUser ? game.idUser2 : game.idUser1);
+        let gamesContainer = document.getElementById("games-container");
+        let opUser = (game.idUser1 === loggedUserId ? game.idUser2 : game.idUser1);
         let email = users.filter(u => u.id === opUser)[0].email;
         //players.innerHTML = `<p> Opposite player : ${email}</p>`;
-
         let player = document.createElement('p');
         player.innerHTML = `<p style="text-align:center;"> Opposite player : ${email}</p>`;
-
         let score = document.createElement('p');
         score.innerHTML = `Score:
         X:<span id="playerX"> 0 </span>
         O:<span id="playerO" > 0 </span>`;
-
-        gameContainer.appendChild(player);
-        gameContainer.appendChild(score);
-        gameContainer.appendChild(grid(game));
+        gamesContainer.appendChild(player);
+        gamesContainer.appendChild(score);
+        gamesContainer.appendChild(grid(game));
     }
 }
 
@@ -130,11 +136,13 @@ function reset(idx) {
         .cells
         .forEach(i => {
             game[`c${i}`] = null;
-            let el = document.getElementById(`c${i}_${idx}`);
-            el.innerHTML = '';
-            el.innerText = '';
-            el.style.backgroundColor = conf.dcolor;
+            let gameEl = document.querySelector(`#game_${idx}`);
+            let cellEl = gameEl.querySelector(`#c${i}`);
+            cellEl.innerHTML = '';
+            cellEl.innerText = '';
+            cellEl.style.backgroundColor = conf.dcolor;
         })
+    saveReset(idx);
 }
 
 function scoreGame(game) {
@@ -148,13 +156,6 @@ function scoreGame(game) {
     document.getElementById('playerO').innerHTML = playerO;
 }
 
-function getGames() {
-    fetch('api/query.php?query=games-by-user&id=1')
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(console.error);
-}
-
 function clickCell(cell, idx) {
     if (cell.innerHTML === 'X' || cell.innerHTML === 'O') {
         return;
@@ -164,6 +165,10 @@ function clickCell(cell, idx) {
     let symbol = game.nextMove;
     cell.style.backgroundColor = symbol == "X" ? conf.xcolor : conf.ocolor;
     cell.innerHTML = symbol;
-    game[cell.id.split('_')[0]] = symbol;
+    game[cell.id] = symbol;
+    saveMove(cell.id, symbol, game.id);
     playerWin(game);
 }
+
+window.clickCell = clickCell;
+window.reset = reset;

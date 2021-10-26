@@ -19,16 +19,17 @@
         <h1 class="gameTitle" style="text-align:center">Play X / O</h1>
         <hr>
         <h4 class="loggedUser"></h4>
-        <div class="gameC" id="gameContainer">
+        <div class="container" id="games-container">
             <h4 class="players"></h4>
         </div>
-        <script src="index.js"></script>
+        <script src="index.js" type="module"></script>
         <script src="test.js"></script>
     </section>
 
-    <script>
+    <script type="module">
+        import { loadGames } from '/xzero/index.js';
         (function () {
-            showData();
+            loadGames();
         })();
     </script>
 </body>
