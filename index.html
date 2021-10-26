@@ -11,7 +11,6 @@
         integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="site.css">
-    <title>Document</title>
 </head>
 
 <body>
@@ -19,16 +18,25 @@
         <h1 class="gameTitle" style="text-align:center">Play X / O</h1>
         <hr>
         <h4 class="loggedUser"></h4>
-        <div class="gameC" id="gameContainer">
-            <h4 class="players"></h4>
+
+        <div id="gameContainer">
+            <!-- status -->
+                <!-- <h4 class="players"></h4> -->
+                <!-- score -->
+                <!-- state -->
+                <!-- container -->
+            <!-- -->
         </div>
-        <script src="index.js"></script>
+          
+
+        <script src="index.js" type="module"></script>
         <script src="test.js"></script>
     </section>
 
-    <script>
+    <script type="module">
+        import { loadGames } from '/xzero/index.js';
         (function () {
-            showData();
+            loadGames();
         })();
     </script>
 </body>
