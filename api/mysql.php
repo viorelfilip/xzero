@@ -24,6 +24,7 @@
         // method declaration
         public static function query($sql, $params=null)
         {
+            $stmt = self::$conn->prepare($sql);
             $rows = array();
             $result = null;
             /* check connection */
@@ -33,25 +34,22 @@
                 exit();
             }
             if (!empty($params)) {
-                $stmt = self::$conn->prepare($sql);
-                // foreach ($params as $p) {
-                //     $stmt->bind_param('s', $p); // bind all as string
-                // }
                 $types = str_repeat('s', count($params)); // bind all as string
                 $stmt->bind_param($types, ...$params); // bind array at once;
-                $stmt->execute();
-                $result = $stmt->get_result();
-            } else {
-                $result = mysqli_query(self::$conn, $sql);
             }
-            // while ($row = $result->fetch_assoc()) {
-            //     $rows[] = $row;
-            // }
-            // mysqli_free_result($result); // free the result set
-            if (!empty($stmt)) {
-                $stmt->close();
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if (!empty($result)) { // SELECT || stored procedure
+                while ($row = $result->fetch_assoc()) {
+                    $rows[] = $row;
+                }
+                mysqli_free_result($result); // free the result set
+                print json_encode($rows); // return as json array
+            } else { // INSERT || UPDATE
+                header('Content-Type: application/json; charset=utf-8');
+                print '{"message":"'.$stmt->affected_rows.' affected rows"}';
             }
-            print json_encode($rows); // return as json array
+            $stmt->close();
         }
     }
     mysql::connect();
