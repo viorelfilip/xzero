@@ -1,6 +1,6 @@
-div.game-cell{
-    width: 130px;
-    height: 120px;
+div.game-cell {
+    width: 105px;
+    height: 95px;
     margin: 1px;
     text-align: center;
     font-weight: bolder;
@@ -11,8 +11,14 @@ div.game-cell{
     border: 1px solid black;
     cursor: pointer;
 }
+.move-active{
+    font-weight: bolder;
+}
+.move-await{
+    font-weight: normal;
+}
 
-div.game-container {
+div.container {
     display: grid;
     grid-template-columns: repeat(3, auto);
     margin: auto;
@@ -22,27 +28,26 @@ h4 {
     text-align: center;
 }
 
-#gameContainer{
+#gameContainer {
     display: flex;
-
 }
 
-.game{
+.game {
     display: flex;
     flex-direction: row;
 }
 
-.status{
+.status {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
     margin-right: 20px;
 }
-p{
+
+p {
     margin-left: 20px;
-   
 }
 
-p:first-of-type{
+p:first-of-type {
     margin-top: 20px;
 }

@@ -22,3 +22,7 @@ export function saveReset(gameid) {
 export function gamesByUser(userid) {
     return fetch(`/xzero/api/query.php?query=games-by-user&id=${userid}`);
 }
+
+export function getPlayers() {
+    return fetch(`/xzero/api/query.php?query=users-all`);
+}

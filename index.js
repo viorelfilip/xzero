@@ -1,4 +1,4 @@
-import { saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import { getPlayers, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -17,10 +17,6 @@ let conf = {
     winsound: new Audio("win-sound.mp3"),
     defsound: new Audio("def-sound.mp3")
 }
-
-let currPlayer = "X";
-let oppPlayer = "O";
-
 
 let games = [ // doar jocurile utilizatorului conectat
     {
@@ -81,10 +77,16 @@ export function loadGames() {
         .then(response => response.json())
         .then(data => {
             games = data;
-            showGames();
-            showLoggedUser();
+
+            getPlayers()
+                .then(response => response.json())
+                .then(data => {
+                    users = data;
+                    showGames();
+                    showLoggedUser();
+                })
             console.warn(data);
-        })
+        });
 }
 
 function showLoggedUser() {
@@ -92,12 +94,10 @@ function showLoggedUser() {
     el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUserId)[0].email;
 }
 
-
 function grid(game) {
     let idx = games.indexOf(game);
     let el = document.createElement('div');
-    el.className = "container";
-    el.id = `game_${idx}`;
+    el.className = "container px-0";
     //config cell 
     conf.cells.forEach(i => {
         let propValue = game[`c${i}`];
@@ -119,37 +119,47 @@ function showGames() {
 
         let divState = document.createElement("div");
         divState.className = "status";
-
+        divState.id = `game_${idx}`
         //opp player
         let opUser = (game.idUser1 === loggedUserId ? game.idUser2 : game.idUser1);
         let email = users.filter(u => u.id === opUser)[0].email;
-        let player = document.createElement('p');
-        player.innerHTML = `Player : ${email}`;
-        divState.appendChild(player);
+        let current = document.createElement('p');
+        current.id = 'current';
+        setPlayerState(current, game, true);
+        let partner = document.createElement('p');
+        partner.id = 'partner';
+        setPlayerState(partner, game)
 
-        //score
-        let score = document.createElement('p');
-        score.innerHTML = `Score:
-            X:<span id="playerX${idx}"> 0 </span>
-            O:<span id="playerO${idx}"> 0 </span>`;
-        divState.appendChild(score);
-
-        //state game
-        let status = document.createElement("p");
-        status.innerHTML = `It's turn of player: <span id="status${idx}">${game.nextMove === 'X' ? 'O' : 'X'}</span>`;
-        divState.appendChild(status);
+        divState.appendChild(current);
+        divState.appendChild(partner);
 
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
 
         //button reset
-        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="btn btn-lg btn-primary" disabled>
+        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary" disabled>
         <i class="fa fa-fw fa-undo"></i> Reset</button>`;
 
     }
 
 }
 
+function setPlayerState(element, game, loggedUser = false) {
+    if (loggedUser) {
+        let scor = loggedUserId == game.idUser1 ? game.scorUser1 : game.scorUser2;
+        let myTurn = (game.nextMove == 'X' && game.userX == loggedUserId) ||
+            (game.nextMove == 'O' && game.userX != loggedUserId);
+        element.innerHTML = `${scor} > You ( ${myTurn ? 'My turn' : 'Wait'} )`;
+        element.className = myTurn ? "move-active" : "move-await";
+    } else {
+        let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
+        let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
+        let yourTurn = (game.nextMove == 'X' && game.userX != loggedUserId) ||
+            (game.nextMove == 'O' && game.userX == loggedUserId);
+        element.innerHTML = `${scor} > ${partner.email} ( ${yourTurn ? 'Your turn' : 'Wait'} )`;
+        element.className = yourTurn ? "move-active" : "move-await";
+    }
+}
 
 function playerWin(game) { //aici ar trebui sa verificam cine a castigat. id1 sau id2 pt afisare scor.
     let wins = ['OOO', 'XXX'];
@@ -206,23 +216,8 @@ function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu
     }
 
     const gameId = games.indexOf(game);
-
-    if (idPlayer === game?.idUser1) {
-        game.score.scoreX++;
-    } else {
-        game.score.scoreO++;
-    };
     document.getElementById(`btn${gameId}`).disabled = false;
-    document.getElementById(`playerX${gameId}`).innerHTML = game.score.scoreX;
-    document.getElementById(`playerO${gameId}`).innerHTML = game.score.scoreO;
 
-}
-
-function getGames() { //din bd
-    fetch('api/query.php?query=games-by-user&id=1')
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(console.error);
 }
 
 function clickCell(cell, idx) {
@@ -230,28 +225,22 @@ function clickCell(cell, idx) {
         return;
     }
     let game = games[idx];
-    document.getElementById(`status${idx}`).innerHTML = game.nextMove;
-    game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
     let symbol = game.nextMove;
-
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
     game[cell.id] = symbol;
     game[cell.id] = symbol;
-    saveMove(cell.id, symbol, game.id);
     playerWin(game);
+    game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
+    saveMove(cell.id, symbol, game.id);
+    let gameEl = document.querySelector(`#game_${idx}`);
+    setPlayerState(gameEl.querySelector('#current'), game, true);
+    setPlayerState(gameEl.querySelector('#partner'), game);
 }
 
 function setColor(symbol) {
     return symbol == "X" ? conf.xcolor : conf.ocolor;
 }
-
-
-function gameOver() {
-
-
-}
-
 
 //jocurile sa fie pe orizonatala; 
 //butonul de reset enable si disabled; 
