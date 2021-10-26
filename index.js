@@ -4,9 +4,9 @@ let loggedUserId = 2; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' },
-    { id: 3, email: 'ioana.pop@gmail.com' },
-    { id: 4, email: 'ionut.popescu@gmail.com' },
-    { id: 5, email: 'ana.ionescu@gmail.com' }
+    { id: 3, email: 'ancutafarcas@gmail.com' },
+    { id: 4, email: 'dana.melniciuc@gmail.com' },
+    { id: 5, email: 'derek.st@gmail.com' }
 ];
 
 let conf = {
