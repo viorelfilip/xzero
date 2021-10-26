@@ -142,7 +142,7 @@ function reset(idx) {
             cellEl.innerText = '';
             cellEl.style.backgroundColor = conf.dcolor;
         })
-    saveReset(idx);
+    saveReset(game.id);
 }
 
 function scoreGame(game) {
