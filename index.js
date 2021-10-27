@@ -54,15 +54,24 @@ export function loadGames() {
                 .then(data => {
                     users = data;
                     showGames();
-                    showLoggedUser();
+                    showPlayers();
                 })
             console.warn(data);
         });
 }
 
-function showLoggedUser() {
-    let el = document.getElementsByClassName("loggedUser")[0];
-    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUserId)[0].email;
+function showPlayers() {
+    let el = document.getElementById("players");
+    el.innerHTML = '';    
+    users.forEach(u => {
+        el.innerHTML += `<option value="${u.id}" ${u.id == loggedUserId ? 'selected' : ''}>${u.email}</option>`;
+    });
+}
+
+function onPlayerChange(){
+    loggedUserId = +document.getElementById("players").value;
+    document.getElementById('gameContainer').innerHTML = '';
+    loadGames();
 }
 
 function grid(game) {
@@ -233,9 +242,6 @@ function clickCell(cell, idx) {
     setPlayerState(gameEl.querySelector('#current'), game, true);
     setPlayerState(gameEl.querySelector('#partner'), game);
     waitPartnerMove(game);
-    setTimeout(() => {
-        waitPlayerMove(game);
-    }, 3000);
 }
 
 function waitPartnerMove(game) {
@@ -260,6 +266,28 @@ function setColor(symbol) {
     return symbol == "X" ? conf.xcolor : conf.ocolor;
 }
 
+(function () {
+    setInterval(() => {
+        gamesByUser(loggedUserId)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(g => {
+                    let game = games.filter(gm => gm.id == g.id)[0];
+                    if (JSON.stringify(g) !== JSON.stringify(game)) {
+                        Object.assign(game, g);
+                        let idx = games.indexOf(game);
+                        conf.cells.forEach(i => {
+                            let propValue = game[`c${i}`];
+                            let cell = document.getElementById(`game_${idx}`).querySelector(`#c${i}`);
+                            cell.innerHTML = propValue || '';
+                            cell.style['background-color'] = propValue === null ? conf.dcolor : setColor(propValue);
+                        });
+                    }
+                })
+            });
+    }, 6000);
+})()
 
 window.clickCell = clickCell;
 window.reset = reset;
+window.onPlayerChange = onPlayerChange;
