@@ -17,7 +17,8 @@ $queries = array( // declare here all the queries
     'set-game-c6'    => "update games set c6=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
     'set-game-c7'    => "update games set c7=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
     'set-game-c8'    => "update games set c8=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
-    'set-game-c9'    => "update games set c9=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?"
+    'set-game-c9'    => "update games set c9=?, nextMove=IF(nextMove='X', 'O', 'X') where id=?",
+    'set-game-scor'  => "update games set scorUser1=?, scorUser2=? where id=?"
 );
 
 if (!empty($argv)) { // for debug scenario, command line get params

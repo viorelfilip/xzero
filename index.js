@@ -1,4 +1,5 @@
-import { getPlayers, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+// import { saveScore } from './data';
+import { getPlayers, saveMove, saveScore, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 2; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -188,7 +189,7 @@ function playerWin(game) { //aici ar trebui sa verificam cine a castigat. id1 sa
     if (~wins.indexOf(game.c7 + game.c8 + game.c9)) {
         scoreGame(game, game.c7);
     }
-    conf.defsound.play();
+    conf.clicksound.play();
 }
 
 function reset(idx) {
@@ -216,6 +217,7 @@ function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu
         else game.scorUser1++;
     }
 
+    saveScore(game.scorUser1, game.scorUser2, game.id);
     const gameId = games.indexOf(game);
     document.getElementById(`btn${gameId}`).disabled = false;
 
@@ -229,7 +231,7 @@ function clickCell(cell, idx) {
     let symbol = game.nextMove;
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
-    game[cell.id] = symbol;
+    // game[cell.id] = symbol;
     game[cell.id] = symbol;
     playerWin(game);
     game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
