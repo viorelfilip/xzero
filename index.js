@@ -1,6 +1,6 @@
-import { getPlayers, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import { getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
-let loggedUserId = 2; // utilizatorul conectat in aplicatie
+let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
     { id: 1, email: 'viorelfilip@outlook.com' },
     { id: 2, email: 'emeric.lacatus@gmail.com' },
@@ -34,43 +34,14 @@ let games = [ // doar jocurile utilizatorului conectat
         c6: null,
         c7: null,
         c8: null,
-        c9: null
-    },
-    {
-        id: 2,
-        idUser1: 1,
-        idUser2: 3,
-        scorUser1: 0,
-        scorUser2: 0,
-        nextMove: "X",
-        c1: 'O',
-        c2: null,
-        c3: null,
-        c4: null,
-        c5: 'X',
-        c6: null,
-        c7: null,
-        c8: 'X',
-        c9: null
-    },
-    {
-        id: 3,
-        idUser1: 1,
-        idUser2: 4,
-        scorUser1: 0,
-        scorUser2: 0,
-        nextMove: "O",
-        c1: null,
-        c2: null,
-        c3: null,
-        c4: null,
-        c5: null,
-        c6: null,
-        c7: null,
-        c8: null,
-        c9: null
+        c9: null,
+        active: true
     }
 ];
+
+let disableClick = (event) => {
+    event.preventDefault();
+}
 
 export function loadGames() {
     gamesByUser(loggedUserId)
@@ -83,21 +54,31 @@ export function loadGames() {
                 .then(data => {
                     users = data;
                     showGames();
-                    showLoggedUser();
+                    showPlayers();
                 })
             console.warn(data);
         });
 }
 
-function showLoggedUser() {
-    let el = document.getElementsByClassName("loggedUser")[0];
-    el.innerHTML = 'Player: ' + users.filter(u => u.id === loggedUserId)[0].email;
+function showPlayers() {
+    let el = document.getElementById("players");
+    el.innerHTML = '';    
+    users.forEach(u => {
+        el.innerHTML += `<option value="${u.id}" ${u.id == loggedUserId ? 'selected' : ''}>${u.email}</option>`;
+    });
+}
+
+function onPlayerChange(){
+    loggedUserId = +document.getElementById("players").value;
+    document.getElementById('gameContainer').innerHTML = '';
+    loadGames();
 }
 
 function grid(game) {
     let idx = games.indexOf(game);
     let el = document.createElement('div');
-    el.className = "container px-0";
+    el.className = "container";
+
     //config cell 
     conf.cells.forEach(i => {
         let propValue = game[`c${i}`];
@@ -113,9 +94,7 @@ function grid(game) {
 function showGames() {
     for (let game of games) {
         let idx = games.indexOf(game);
-        // let players = document.getElementsByClassName("players")[0];
         let gameContainer = document.getElementById("gameContainer");
-        //let gameContainer = document.createElement('div');
 
         let divState = document.createElement("div");
         divState.className = "status";
@@ -136,12 +115,35 @@ function showGames() {
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
 
+
+
+        if (!game.active) waitPartnerMove(game);
         //button reset
-        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary" disabled>
+        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary" ${game.active ? 'disabled' : ''}>
         <i class="fa fa-fw fa-undo"></i> Reset</button>`;
 
     }
 
+}
+
+function setCellsDisable(game) {
+    //     for(let prop in game){
+    //       // console.log(game[prop]);
+    //        if(game[prop] === 'X'){
+    //         //    console.log(document.querySelector(prop));
+    //         //    console.log("prop: " + prop)
+    //             const cell = document.querySelector(prop);
+    //             cell.disabled = true;
+    //        } else {
+    //             //document.getElementById(`c${i}`).disabled = false;
+    //        }
+
+    //        if(game[prop] === 'O'){
+    //             //document.getElementById(prop).disabled = true;
+    //        } else {
+    //            // document.getElementById(`c${i}`).disabled = false;
+    //        }
+    //    };
 }
 
 function setPlayerState(element, game, loggedUser = false) {
@@ -151,6 +153,8 @@ function setPlayerState(element, game, loggedUser = false) {
             (game.nextMove == 'O' && game.userX != loggedUserId);
         element.innerHTML = `${scor} > You ( ${myTurn ? 'My turn' : 'Wait'} )`;
         element.className = myTurn ? "move-active" : "move-await";
+        console.log(myTurn);
+        setCellsDisable(game);
     } else {
         let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
         let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
@@ -159,9 +163,10 @@ function setPlayerState(element, game, loggedUser = false) {
         element.innerHTML = `${scor} > ${partner.email} ( ${yourTurn ? 'Your turn' : 'Wait'} )`;
         element.className = yourTurn ? "move-active" : "move-await";
     }
+
 }
 
-function playerWin(game) { //aici ar trebui sa verificam cine a castigat. id1 sau id2 pt afisare scor.
+function playerWin(game) {
     let wins = ['OOO', 'XXX'];
     if (~wins.indexOf(game.c1 + game.c2 + game.c3)) {
         scoreGame(game, game.c1);
@@ -203,10 +208,11 @@ function reset(idx) {
             cellEl.style.backgroundColor = conf.dcolor;
         })
     saveReset(game.id);
+
 }
 
-function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu x sau cu o,
-    conf.winsound.play();             // in functie de id mergem in game si verificm daca id ul celui care a castigat sau a pierdut e egal cu jucatorul curent
+function scoreGame(game, cellValue) {
+    conf.winsound.play();
     if (cellValue === 'X') {
         if (game.idUser1 == game.userX) game.scorUser1++;
         else game.scorUser2++;
@@ -214,10 +220,9 @@ function scoreGame(game, cellValue) { //jucatorul curent verificam daca joaca cu
         if (game.idUser1 == game.userX) game.scorUser2++;
         else game.scorUser1++;
     }
-
     const gameId = games.indexOf(game);
     document.getElementById(`btn${gameId}`).disabled = false;
-
+    saveScore(game.scorUser1, game.scorUser2, game.id);
 }
 
 function clickCell(cell, idx) {
@@ -236,20 +241,53 @@ function clickCell(cell, idx) {
     let gameEl = document.querySelector(`#game_${idx}`);
     setPlayerState(gameEl.querySelector('#current'), game, true);
     setPlayerState(gameEl.querySelector('#partner'), game);
+    waitPartnerMove(game);
+}
+
+function waitPartnerMove(game) {
+    let idx = games.indexOf(game);
+    let el = document.getElementById(`game_${idx}`).querySelector('.container');
+    el.style.setProperty('pointer-events', 'none');
+    el.style.setProperty('opacity', '50%');
+    // el.style.setProperty('background-color', 'gray');
+    el.addEventListener('click', disableClick);
+}
+
+function waitPlayerMove(game) {
+    let idx = games.indexOf(game);
+    let el = document.getElementById(`game_${idx}`).querySelector('.container');
+    el.style['pointer-events'] = null;
+    el.style['opacity'] = null;
+    // el.style.setProperty('background-color', 'gray');
+    el.removeEventListener('click', disableClick);
 }
 
 function setColor(symbol) {
     return symbol == "X" ? conf.xcolor : conf.ocolor;
 }
 
-//jocurile sa fie pe orizonatala; 
-//butonul de reset enable si disabled; 
-//afisare  player, score, cine urmeaza; 
-//state in UI, jocul sa fie luat din baza de date la stadiul in care a ramas; 
-//acoperire grid cu blur cand se castiga sau game over; 
-//scorul afisat pt fiecare jucator;
-//utilizatorul curent cu id1 are doua jocuri in asteptare: 1 in care el trebuie sa faca mutarea, 
-// si al doilea in care sa astepte dupa jucator;
-//afisare mesaj "turn of player x, sau turn of player o";
+(function () {
+    setInterval(() => {
+        gamesByUser(loggedUserId)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(g => {
+                    let game = games.filter(gm => gm.id == g.id)[0];
+                    if (JSON.stringify(g) !== JSON.stringify(game)) {
+                        Object.assign(game, g);
+                        let idx = games.indexOf(game);
+                        conf.cells.forEach(i => {
+                            let propValue = game[`c${i}`];
+                            let cell = document.getElementById(`game_${idx}`).querySelector(`#c${i}`);
+                            cell.innerHTML = propValue || '';
+                            cell.style['background-color'] = propValue === null ? conf.dcolor : setColor(propValue);
+                        });
+                    }
+                })
+            });
+    }, 6000);
+})()
+
 window.clickCell = clickCell;
 window.reset = reset;
+window.onPlayerChange = onPlayerChange;
