@@ -5,19 +5,17 @@ export function isSaving(value) {
     return saving;
 }
 
-
 export function saveMove(cell, value, gameid) {
     isSaving(true);
     return fetch("/xzero/api/query.php", {
         method: "POST",
         body: JSON.stringify({
-            "query": `set-active-game`,
+            "query": `set-game-${cell}`,
+            value,
             gameid
         })
-    })
+    }).then(res=>isSaving(false));
 }
-
-
 
 export function saveScore(scorUser1, scorUser2, gameid) {
     return fetch("/xzero/api/query.php", {
@@ -40,7 +38,20 @@ export function saveReset(gameid) {
             gameid
         })
     }).then(res=>isSaving(false));
+    
 }
+
+export function setNonActive(gameid) {
+    isSaving(true);
+    return fetch("/xzero/api/query.php", {
+        method: "POST",
+        body: JSON.stringify({
+            "query": `set-game-nonactive`,
+            gameid
+        })
+    }).then(res=>isSaving(false));
+}
+
 
 export function gamesByUser(userid) {
     return fetch(`/xzero/api/query.php?query=games-by-user&id=${userid}`);

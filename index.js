@@ -1,4 +1,4 @@
-import {isSaving, getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import {isSaving, setNonActive, getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -129,7 +129,7 @@ function showGames() {
         gameContainer.appendChild(divState);
 
         setPlayerState(game, true);
-        setPlayerState(game)
+        setPlayerState(game);
 
         if (!game.active) waitPartnerMove(game);
         //button reset
@@ -198,16 +198,16 @@ function playerWin(game) {
     conf.clicksound.play();
 }
 
-function drawGame(game){
-    if ((game.c1 == 'X' || game.c1 == 'O') && (game.c2 == 'X'
-        || game.c2 == 'O') && (game.c3 == 'X' || game.c3 == 'O') &&
-        (game.c4 == 'X' || game.c4 == 'O') && (game.c5 == 'X' ||
-        game.c5 == 'O') && (game.c6 == 'X' || game.c6 == 'O') &&
-        (game.c7 == 'X' || game.c7 == 'O') && game.c8 == 'X' ||
-        (game.c8 == 'O') && (game.c9 == 'X' || game.c9 == 'O')) {
-            setActive(game.id);
-    }
-}
+// function drawGame(game){
+//     if ((game.c1 == 'X' || game.c1 == 'O') && (game.c2 == 'X'
+//         || game.c2 == 'O') && (game.c3 == 'X' || game.c3 == 'O') &&
+//         (game.c4 == 'X' || game.c4 == 'O') && (game.c5 == 'X' ||
+//         game.c5 == 'O') && (game.c6 == 'X' || game.c6 == 'O') &&
+//         (game.c7 == 'X' || game.c7 == 'O') && game.c8 == 'X' ||
+//         (game.c8 == 'O') && (game.c9 == 'X' || game.c9 == 'O')) {
+//             setActive(game.id);
+//     }
+// }
 
 function reset(idx) {
     let game = games[idx];
@@ -241,6 +241,8 @@ function scoreGame(game, cellValue) {
     saveScore(game.scorUser1, game.scorUser2, game.id);
     //console.log(game);
     game['active'] = false;
+    setNonActive(game.id);
+
   //  console.log(game);
 }
 
@@ -333,6 +335,7 @@ function setColor(symbol) {
                         });
                         setPlayerState(game, true);
                         setPlayerState(game);
+                        playerWin(game);
                     }
                 })
             });
