@@ -62,13 +62,13 @@ export function loadGames() {
 
 function showPlayers() {
     let el = document.getElementById("players");
-    el.innerHTML = '';    
+    el.innerHTML = '';
     users.forEach(u => {
         el.innerHTML += `<option value="${u.id}" ${u.id == loggedUserId ? 'selected' : ''}>${u.email}</option>`;
     });
 }
 
-function onPlayerChange(){
+function onPlayerChange() {
     loggedUserId = +document.getElementById("players").value;
     document.getElementById('gameContainer').innerHTML = '';
     loadGames();
@@ -104,10 +104,8 @@ function showGames() {
         let email = users.filter(u => u.id === opUser)[0].email;
         let current = document.createElement('p');
         current.id = 'current';
-        setPlayerState(current, game, true);
         let partner = document.createElement('p');
         partner.id = 'partner';
-        setPlayerState(partner, game)
 
         divState.appendChild(current);
         divState.appendChild(partner);
@@ -115,7 +113,8 @@ function showGames() {
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
 
-
+        setPlayerState(game, true);
+        setPlayerState(game)
 
         if (!game.active) waitPartnerMove(game);
         //button reset
@@ -126,27 +125,9 @@ function showGames() {
 
 }
 
-function setCellsDisable(game) {
-    //     for(let prop in game){
-    //       // console.log(game[prop]);
-    //        if(game[prop] === 'X'){
-    //         //    console.log(document.querySelector(prop));
-    //         //    console.log("prop: " + prop)
-    //             const cell = document.querySelector(prop);
-    //             cell.disabled = true;
-    //        } else {
-    //             //document.getElementById(`c${i}`).disabled = false;
-    //        }
-
-    //        if(game[prop] === 'O'){
-    //             //document.getElementById(prop).disabled = true;
-    //        } else {
-    //            // document.getElementById(`c${i}`).disabled = false;
-    //        }
-    //    };
-}
-
-function setPlayerState(element, game, loggedUser = false) {
+function setPlayerState(game, loggedUser = false) {
+    let idx = games.indexOf(game);
+    let element = document.getElementById(`game_${idx}`).querySelector(`#${loggedUser ? 'current' : 'partner'}`);
     if (loggedUser) {
         let scor = loggedUserId == game.idUser1 ? game.scorUser1 : game.scorUser2;
         let myTurn = (game.nextMove == 'X' && game.userX == loggedUserId) ||
@@ -154,7 +135,7 @@ function setPlayerState(element, game, loggedUser = false) {
         element.innerHTML = `${scor} > You ( ${myTurn ? 'My turn' : 'Wait'} )`;
         element.className = myTurn ? "move-active" : "move-await";
         console.log(myTurn);
-        setCellsDisable(game);
+        myTurn ? waitPlayerMove(game) : waitPartnerMove(game);
     } else {
         let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
         let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
@@ -239,9 +220,8 @@ function clickCell(cell, idx) {
     game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
     saveMove(cell.id, symbol, game.id);
     let gameEl = document.querySelector(`#game_${idx}`);
-    setPlayerState(gameEl.querySelector('#current'), game, true);
-    setPlayerState(gameEl.querySelector('#partner'), game);
-    waitPartnerMove(game);
+    setPlayerState(game, true);
+    setPlayerState(game);
 }
 
 function waitPartnerMove(game) {
@@ -282,6 +262,8 @@ function setColor(symbol) {
                             cell.innerHTML = propValue || '';
                             cell.style['background-color'] = propValue === null ? conf.dcolor : setColor(propValue);
                         });
+                        setPlayerState(game, true);
+                        setPlayerState(game);
                     }
                 })
             });
