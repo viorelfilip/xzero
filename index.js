@@ -332,12 +332,15 @@ function setColor(symbol) {
                             let cell = document.getElementById(`game_${idx}`).querySelector(`#c${i}`);
                             cell.innerHTML = propValue || '';
                             cell.style['background-color'] = propValue === null ? conf.dcolor : setColor(propValue);
+                           
+                         
                         });
                         setPlayerState(game, true);
                         setPlayerState(game);
-                        playerWin(game);
                     }
+
                 })
+             
             });
     }, 3000);
 })()
