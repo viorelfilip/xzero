@@ -1,4 +1,4 @@
-import { getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import {isSaving, getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -297,10 +297,11 @@ function setColor(symbol) {
 
 (function () {
     setInterval(() => {
+        if(isSaving()) return;
         gamesByUser(loggedUserId)
             .then(response => response.json())
             .then(data => {
-                //console.log(data);
+                if(isSaving()) return;
                 data.forEach(g => {
                     let game = games.filter(gm => gm.id == g.id)[0];
                     if (JSON.stringify(g) !== JSON.stringify(game)) {
@@ -317,7 +318,7 @@ function setColor(symbol) {
                     }
                 })
             });
-    }, 6000);
+    }, 3000);
 })()
 
 window.clickCell = clickCell;
