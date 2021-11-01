@@ -21,8 +21,8 @@ div.game-cell {
 div.container {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    margin: 5px;
-    width: auto;
+    margin: 10px;
+    width: fit-content;
    
 }
 
