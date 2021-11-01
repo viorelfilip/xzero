@@ -1,4 +1,4 @@
-import { getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import { getPlayers, saveScore, setActive, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -116,11 +116,12 @@ function showGames() {
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
 
+        setActive(game.id);
 
-
-        if (!game.active) waitPartnerMove(game);
+        if (!game.active) waitPlayerMove(game);
+       
         //button reset
-        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary" ${game.active ? 'disabled' : ''}>
+        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary"}>
         <i class="fa fa-fw fa-undo"></i> Reset</button>`;
 
     }
@@ -156,6 +157,7 @@ function setPlayerState(element, game, loggedUser = false) {
         element.className = myTurn ? "move-active" : "move-await";
         console.log(myTurn);
         setCellsDisable(game);
+       
     } else {
         let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
         let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
@@ -164,8 +166,13 @@ function setPlayerState(element, game, loggedUser = false) {
         element.innerHTML = `${scor} > ${partner.email} ( ${yourTurn ? 'Your turn' : 'Wait'} )`;
         element.className = yourTurn ? "move-active" : "move-await";
     }
+    
 
 }
+
+    
+    
+
 
 function playerWin(game) {
     let wins = ['OOO', 'XXX'];
@@ -194,6 +201,17 @@ function playerWin(game) {
         scoreGame(game, game.c7);
     }
     conf.clicksound.play();
+}
+
+function drawGame(game){
+    if ((game.c1 == 'X' || game.c1 == 'O') && (game.c2 == 'X'
+        || game.c2 == 'O') && (game.c3 == 'X' || game.c3 == 'O') &&
+        (game.c4 == 'X' || game.c4 == 'O') && (game.c5 == 'X' ||
+        game.c5 == 'O') && (game.c6 == 'X' || game.c6 == 'O') &&
+        (game.c7 == 'X' || game.c7 == 'O') && game.c8 == 'X' ||
+        (game.c8 == 'O') && (game.c9 == 'X' || game.c9 == 'O')) {
+            setActive(game.id);
+    }
 }
 
 function reset(idx) {
@@ -230,19 +248,26 @@ function clickCell(cell, idx) {
     if (cell.innerHTML === 'X' || cell.innerHTML === 'O') {
         return;
     }
+    
     let game = games[idx];
     let symbol = game.nextMove;
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
-    // game[cell.id] = symbol;
     game[cell.id] = symbol;
     playerWin(game);
+    drawGame(game);
     game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
     saveMove(cell.id, symbol, game.id);
     let gameEl = document.querySelector(`#game_${idx}`);
     setPlayerState(gameEl.querySelector('#current'), game, true);
     setPlayerState(gameEl.querySelector('#partner'), game);
     waitPartnerMove(game);
+
+   
+
+   
+   
+
 }
 
 function waitPartnerMove(game) {
