@@ -95,16 +95,7 @@ function grid(game) {
 
 }
 
-//draw function
-function draw(game) {
-    const isFull = Object.values(game).every(c => c != null);//check if the grid is full
-    if (isFull) {
-        const gameId = games.indexOf(game);
-        document.getElementById(`btn${gameId}`).disabled = false;
-        //alert("Draw!");
-        disableContainer(game);
-    }
-}
+
 
 function showGames() {
     for (let game of games) {
@@ -126,18 +117,24 @@ function showGames() {
         divState.appendChild(current);
         divState.appendChild(partner);
         divState.appendChild(grid(game));
+        
         gameContainer.appendChild(divState);
 
-        setPlayerState(game, true);
-        setPlayerState(game);
-
-        if (!game.active) waitPartnerMove(game);
-        //button reset
-        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary"}>
-        <i class="fa fa-fw fa-undo"></i> Reset</button>`;
-        draw(game);
-
-      //  disableContainer(game);
+        if(game.active){
+            setPlayerState(game, true);
+            setPlayerState(game);
+        } else {
+            waitPartnerMove(game);
+            WinOrTie(game,true,game.scorUser1,game.scorUser2);
+            WinOrTie(game,false,game.scorUser1,game.scorUser2);
+            //button reset
+ 
+            
+           
+        }
+      
+        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary"}><i class="fa fa-fw fa-undo"></i> Reset</button>`;
+       
     }
      
 }
@@ -153,6 +150,8 @@ function setPlayerState(game, loggedUser = false) {
         element.className = myTurn ? "move-active" : "move-await";
         console.log(myTurn);
         myTurn ? waitPlayerMove(game) : waitPartnerMove(game);
+       
+
     } else {
         let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
         let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
@@ -164,6 +163,40 @@ function setPlayerState(game, loggedUser = false) {
     
 
 }
+
+function WinOrTie(game, loggedUser = false, oldScorU1, oldScorU2) {
+    let idx = games.indexOf(game);
+    let element = document.getElementById(`game_${idx}`).querySelector(`#${loggedUser ? 'current' : 'partner'}`);
+    if (loggedUser) {
+        let scor = loggedUserId == game.idUser1 ? game.scorUser1 : game.scorUser2;
+        if((scor > oldScorU1) || (scor > oldScorU2)){
+            element.innerHTML = `${scor} > You `;
+            element.className = "move-active";
+        }else {
+            element.innerHTML = `${scor} > You `;
+            element.className = "move-await";
+        }
+       
+
+    } else {
+        let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
+        let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
+
+        if((scor > oldScorU1) || (scor > oldScorU2)){
+            element.innerHTML = `${scor} > ${partner.email} `;
+            element.className = "move-active";
+        }else {
+            element.innerHTML = `${scor} > ${partner.email} `;
+            element.className = "move-await";
+        }
+       
+
+    }
+    
+
+}
+
+
 
     
     
@@ -196,18 +229,20 @@ function playerWin(game) {
         scoreGame(game, game.c7);
     }
     conf.clicksound.play();
+
 }
 
-// function drawGame(game){
-//     if ((game.c1 == 'X' || game.c1 == 'O') && (game.c2 == 'X'
-//         || game.c2 == 'O') && (game.c3 == 'X' || game.c3 == 'O') &&
-//         (game.c4 == 'X' || game.c4 == 'O') && (game.c5 == 'X' ||
-//         game.c5 == 'O') && (game.c6 == 'X' || game.c6 == 'O') &&
-//         (game.c7 == 'X' || game.c7 == 'O') && game.c8 == 'X' ||
-//         (game.c8 == 'O') && (game.c9 == 'X' || game.c9 == 'O')) {
-//             setActive(game.id);
-//     }
-// }
+function drawGame(game){
+    if ((game.c1 == 'X' || game.c1 == 'O') && (game.c2 == 'X'
+        || game.c2 == 'O') && (game.c3 == 'X' || game.c3 == 'O') &&
+        (game.c4 == 'X' || game.c4 == 'O') && (game.c5 == 'X' ||
+        game.c5 == 'O') && (game.c6 == 'X' || game.c6 == 'O') &&
+        (game.c7 == 'X' || game.c7 == 'O') && game.c8 == 'X' ||
+        (game.c8 == 'O') && (game.c9 == 'X' || game.c9 == 'O')) {
+            setNonActive(game.id);
+            console.log("Tie");
+    }
+}
 
 function reset(idx) {
     let game = games[idx];
@@ -223,7 +258,8 @@ function reset(idx) {
             cellEl.style.backgroundColor = conf.dcolor;
         })
     saveReset(game.id);
-    enableContainer(game);
+    // enableContainer(game);
+    waitPartnerMove(game);
 }
 
 function scoreGame(game, cellValue) {
@@ -235,13 +271,16 @@ function scoreGame(game, cellValue) {
         if (game.idUser1 == game.userX) game.scorUser2++;
         else game.scorUser1++;
     }
-    const gameId = games.indexOf(game);
-    document.getElementById(`btn${gameId}`).disabled = false;
-    disableContainer(game);
+    // const gameId = games.indexOf(game);
+    // document.getElementById(`btn${gameId}`).disabled = false;
+    // disableContainer(game);
+    waitPlayerMove(game);
     saveScore(game.scorUser1, game.scorUser2, game.id);
     //console.log(game);
-    game['active'] = false;
+    // game['active'] = false;
     setNonActive(game.id);
+    
+
 
   //  console.log(game);
 }
@@ -256,44 +295,19 @@ function clickCell(cell, idx) {
     cell.innerHTML = symbol;
     cell.style.backgroundColor = setColor(symbol);
     game[cell.id] = symbol;
-    playerWin(game);
-    draw(game);
+    // playerWin(game);
+    // draw(game);
     game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
     saveMove(cell.id, symbol, game.id);
     let gameEl = document.querySelector(`#game_${idx}`);
+    playerWin(game);
+    drawGame(game);
     setPlayerState(game, true);
     setPlayerState(game);
+    // WinOrTie(game,true);
+    // WinOrTie(game);
 }
 
-function disableContainer(game) {
-    let idx = games.indexOf(game);
-    let el = document.getElementById(`game_${idx}`).querySelector('.container');
-    el.style.setProperty('pointer-events', 'none');
-    el.style.setProperty('opacity', '50%');
-    el.addEventListener('click', disableClick);
-}
-
-function enableContainer(game) {
-    let idx = games.indexOf(game);
-    let el = document.getElementById(`game_${idx}`).querySelector('.container');
-    el.style['pointer-events'] = null;
-    el.style['opacity'] = null;
-    el.removeEventListener('click', disableClick);
-}
-
-// function waitPartnerMove(cell, game) {
-//     for (let prop in game) {
-//       //  console.log("nextMove " + game.nextMove, prop.substring(0, 1));
-//         if (prop.substring(0, 1) === "c" && game[prop] === game.nextMove) {
-//          //   console.log("prop: " + prop)
-//             //let cell = document.getElementById(prop);
-//             cell.style.setProperty('pointer-events', 'none');
-//             cell.style.setProperty('opacity', '50%');
-//             cell.addEventListener('click', disableClick);
-//            // console.log(cell);
-//         }
-//     }
-// }
 
 function waitPartnerMove(game) {
     let idx = games.indexOf(game);
@@ -324,6 +338,8 @@ function setColor(symbol) {
                 if(isSaving()) return;
                 data.forEach(g => {
                     let game = games.filter(gm => gm.id == g.id)[0];
+                    let oldScorUser1 = game.scorUser1;
+                    let oldScorUser2 = game.scorUser2;
                     if (JSON.stringify(g) !== JSON.stringify(game)) {
                         Object.assign(game, g);
                         let idx = games.indexOf(game);
@@ -332,13 +348,19 @@ function setColor(symbol) {
                             let cell = document.getElementById(`game_${idx}`).querySelector(`#c${i}`);
                             cell.innerHTML = propValue || '';
                             cell.style['background-color'] = propValue === null ? conf.dcolor : setColor(propValue);
-                           
-                         
                         });
-                        setPlayerState(game, true);
-                        setPlayerState(game);
+                        if(game.active){
+                            setPlayerState(game, true);
+                            setPlayerState(game);
+                        }else{
+                            waitPartnerMove(game);
+                            WinOrTie(game,true,oldScorUser1,oldScorUser2);
+                            WinOrTie(game,false,oldScorUser1,oldScorUser2);
+        
+                        }
+                   
+                       
                     }
-
                 })
              
             });
