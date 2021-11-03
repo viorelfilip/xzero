@@ -167,6 +167,7 @@ function playerWin(game) {
     let wins = ['OOO', 'XXX'];
     if (~wins.indexOf(game.c1 + game.c2 + game.c3)) {
         scoreGame(game, game.c1);
+        message_broadcast("castig");
     }
     if (~wins.indexOf(game.c1 + game.c4 + game.c7)) {
         scoreGame(game, game.c1);
@@ -315,6 +316,8 @@ function setColor(symbol) {
                         });
                         setPlayerState(game, true);
                         setPlayerState(game);
+                        if(!game.active)
+                        disableContainer(game);
                     }
                 })
             });
@@ -324,3 +327,17 @@ function setColor(symbol) {
 window.clickCell = clickCell;
 window.reset = reset;
 window.onPlayerChange = onPlayerChange;
+window.addEventListener("storage", message_receive);
+
+function message_broadcast(message) {
+    localStorage.setItem('castig',JSON.stringify(message));
+}
+
+function message_receive(ev) {
+    if (ev.key == 'castig') {
+        var message=JSON.parse(ev.newValue);
+        let game = games[idx];
+        disableContainer(game);
+        console.log(game);
+    }
+}
