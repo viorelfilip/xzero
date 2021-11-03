@@ -1,4 +1,4 @@
-import {isSaving, getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
+import { isSaving, getPlayers, saveScore, saveMove, saveReset, gamesByUser } from '/xzero/data.js';
 
 let loggedUserId = 1; // utilizatorul conectat in aplicatie
 let users = [ // lista completa de jucatori
@@ -100,10 +100,38 @@ function draw(game) {
     if (isFull) {
         const gameId = games.indexOf(game);
         document.getElementById(`btn${gameId}`).disabled = false;
-        //alert("Draw!");
         disableContainer(game);
+        let msgDraw = document.createElement('div');
+        msgDraw.className = "draw";
+        msgDraw.id = `msg${gameId}`;
+        msgDraw.innerHTML="GAME DRAW!";
+        let gameContainer = document.getElementById( `game_${gameId}`).querySelector('.container');
+        gameContainer.appendChild(msgDraw);
+       
     }
 }
+
+function winMsg(game){
+    let idx = games.indexOf(game);
+    let msgWin =  document.createElement('div');
+    msgWin.className = "win";
+    msgWin.id = `msg${idx}`;
+    msgWin.innerHTML = "YOU WIN!!!";
+    let gameContainer = document.getElementById(`game_${idx}`).querySelector('.container');
+    gameContainer.appendChild(msgWin);
+    
+}
+function loseMsg(game){
+    let idx = games.indexOf(game);
+    let msgLose =  document.createElement('div');
+    msgLose.className = "lose";
+    msgLose.id = `msg${idx}`;
+    msgLose.innerHTML = "YOU LOSE!";
+    let gameContainer = document.getElementById(`game_${idx}`).querySelector('.container');
+    gameContainer.appendChild(msgLose);
+}
+    
+
 
 function showGames() {
     for (let game of games) {
@@ -127,18 +155,18 @@ function showGames() {
         divState.appendChild(grid(game));
         gameContainer.appendChild(divState);
 
-        setPlayerState(game, true);
-        setPlayerState(game)
+
 
         if (!game.active) waitPartnerMove(game);
         //button reset
-        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})" class="w-100 btn btn-lg btn-primary" ${game.active ? 'disabled' : ''}>
+        divState.innerHTML += `<button id="btn${idx}" onClick="reset(${idx})"style="width:230px; margin-left:22px;" class="btn btn-lg btn-primary" ${game.active ? 'disabled' : ''}>
         <i class="fa fa-fw fa-undo"></i> Reset</button>`;
-        draw(game);
 
-      //  disableContainer(game);
+        setPlayerState(game, true);
+        setPlayerState(game)
+        
     }
-     
+
 }
 
 function setPlayerState(game, loggedUser = false) {
@@ -150,8 +178,10 @@ function setPlayerState(game, loggedUser = false) {
             (game.nextMove == 'O' && game.userX != loggedUserId);
         element.innerHTML = `${scor} > You ( ${myTurn ? 'My turn' : 'Wait'} )`;
         element.className = myTurn ? "move-active" : "move-await";
-        console.log(myTurn);
         myTurn ? waitPlayerMove(game) : waitPartnerMove(game);
+        if (!game.active) disableContainer(game);
+        draw(game);
+      
     } else {
         let partner = users.filter(u => u.id == (game.idUser1 == loggedUserId ? game.idUser2 : game.idUser1))[0];
         let scor = partner.id == game.idUser1 ? game.scorUser1 : game.scorUser2;
@@ -159,6 +189,9 @@ function setPlayerState(game, loggedUser = false) {
             (game.nextMove == 'O' && game.userX == loggedUserId);
         element.innerHTML = `${scor} > ${partner.email} ( ${yourTurn ? 'Your turn' : 'Wait'} )`;
         element.className = yourTurn ? "move-active" : "move-await";
+        if (!game.active) disableContainer(game);
+
+
     }
 
 }
@@ -199,7 +232,6 @@ function reset(idx) {
         .forEach(i => {
             game[`c${i}`] = null;
             let gameEl = document.querySelector(`#game_${idx}`);
-            //   console.log(gameEl);
             let cellEl = gameEl.querySelector(`#c${i}`);
             cellEl.innerHTML = '';
             cellEl.innerText = '';
@@ -207,11 +239,17 @@ function reset(idx) {
         })
     saveReset(game.id);
     enableContainer(game);
+    let ele = document.getElementById(`msg${idx}`);
+    if(ele){
+        ele.remove();
+    }
+    
 }
 
 function scoreGame(game, cellValue) {
     conf.winsound.play();
     if (cellValue === 'X') {
+        console.log(game.userX);
         if (game.idUser1 == game.userX) game.scorUser1++;
         else game.scorUser2++;
     } else {
@@ -222,9 +260,8 @@ function scoreGame(game, cellValue) {
     document.getElementById(`btn${gameId}`).disabled = false;
     disableContainer(game);
     saveScore(game.scorUser1, game.scorUser2, game.id);
-    //console.log(game);
-    game['active'] = false;
-  //  console.log(game);
+
+
 }
 
 function clickCell(cell, idx) {
@@ -237,12 +274,13 @@ function clickCell(cell, idx) {
     cell.style.backgroundColor = setColor(symbol);
     game[cell.id] = symbol;
     playerWin(game);
-    draw(game);
+  //  draw(game);
     game.nextMove = game.nextMove === 'X' ? 'O' : 'X';
     saveMove(cell.id, symbol, game.id);
     let gameEl = document.querySelector(`#game_${idx}`);
     setPlayerState(game, true);
     setPlayerState(game);
+  
 }
 
 function disableContainer(game) {
@@ -261,19 +299,6 @@ function enableContainer(game) {
     el.removeEventListener('click', disableClick);
 }
 
-// function waitPartnerMove(cell, game) {
-//     for (let prop in game) {
-//       //  console.log("nextMove " + game.nextMove, prop.substring(0, 1));
-//         if (prop.substring(0, 1) === "c" && game[prop] === game.nextMove) {
-//          //   console.log("prop: " + prop)
-//             //let cell = document.getElementById(prop);
-//             cell.style.setProperty('pointer-events', 'none');
-//             cell.style.setProperty('opacity', '50%');
-//             cell.addEventListener('click', disableClick);
-//            // console.log(cell);
-//         }
-//     }
-// }
 
 function waitPartnerMove(game) {
     let idx = games.indexOf(game);
@@ -297,11 +322,11 @@ function setColor(symbol) {
 
 (function () {
     setInterval(() => {
-        if(isSaving()) return;
+        if (isSaving()) return;
         gamesByUser(loggedUserId)
             .then(response => response.json())
             .then(data => {
-                if(isSaving()) return;
+                if (isSaving()) return;
                 data.forEach(g => {
                     let game = games.filter(gm => gm.id == g.id)[0];
                     if (JSON.stringify(g) !== JSON.stringify(game)) {
@@ -315,6 +340,7 @@ function setColor(symbol) {
                         });
                         setPlayerState(game, true);
                         setPlayerState(game);
+
                     }
                 })
             });
